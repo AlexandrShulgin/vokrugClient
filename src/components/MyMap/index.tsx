@@ -1,28 +1,29 @@
-import React, { useState } from "react";
-import { YMap, YMapComponentsProvider, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapListener, YMapControls, YMapGeolocationControl, YMapZoomControl, YMapFeature, YMapMarker, YMapDefaultMarker, } from "ymap3-components";
-
+import React, { useState, useCallback } from "react";
+import { YMap, YMapComponentsProvider, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapListener, YMapControls, YMapGeolocationControl, YMapZoomControl, YMapDefaultMarker } from "ymap3-components";
 import { location as LOCATION, apiKey } from "./helpers";
 import * as YMaps from "@yandex/ymaps3-types";
 import { LngLat } from "@yandex/ymaps3-types";
-import classes from './index.module.css'
+import classes from './index.module.css';
 import ContextMenu from "../ContextMenu";
 
-const MyMap = () => {
-  const [location, setLocation] = useState(LOCATION);
-  const [ymap, setYmap] = useState<YMaps.YMap>();
+interface Location {
+  center: LngLat;
+  zoom: number;
+}
 
-  const [contextVisible, setContextVisible] = useState(false)
-  const [contextPixelCords, setContextPixelCords] = useState({x: 0, y: 0})
+interface Marker {
+  coordinates: [number, number];
+}
 
-  const [clickMapCords, setClickMapCords] = useState()
+const MyMap: React.FC = () => {
+  const [location, setLocation] = useState<Location>(LOCATION);
+  const [ymap, setYmap] = useState<YMaps.YMap | null>(null);
+  const [contextVisible, setContextVisible] = useState<boolean>(false);
+  const [contextPixelCords, setContextPixelCords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+  const [clickMapCords, setClickMapCords] = useState<[number, number] | null>(null);
+  const [markers, setMarkers] = useState<Marker[]>([{ coordinates: [37.95, 55.65] }]);
 
-  const [markers, setMarkers] = useState<any>([
-    {
-      coordinates: [37.95, 55.65]
-    },
-  ])
-
-  const onUpdate = React.useCallback(({ location, mapInAction }: any) => {
+  const onUpdate = useCallback(({ location, mapInAction }: { location: Location; mapInAction: boolean }) => {
     if (!mapInAction) {
       setLocation({
         center: location.center,
@@ -31,24 +32,24 @@ const MyMap = () => {
     }
   }, []);
 
-  const getMapCords = (object: any, event: any) => {
+  const getMapCords = (object: any, event: { coordinates: LngLat }) => {
     console.log(event.coordinates);
-    setClickMapCords(event.coordinates)
-  }
+    setClickMapCords([event.coordinates[0], event.coordinates[1]]);
+  };
 
-  const contextMenuHandler = (event:any) => {
+  const contextMenuHandler = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.preventDefault();
     const [x, y] = [event.pageX, event.pageY];
-    setContextPixelCords({x: x, y: y})
-    setContextVisible(true)
-  }
+    setContextPixelCords({ x, y });
+    setContextVisible(true);
+  };
 
   return (
     <div className={classes.Map} onContextMenu={contextMenuHandler}>
-      {/* <MapLocation location={location} /> */}
       <YMapComponentsProvider apiKey={apiKey} lang="ru_RU">
         <YMap
           key="map"
-          ref={(ymap: YMaps.YMap) => setYmap(ymap)}
+          ref={(ymapInstance: YMaps.YMap) => setYmap(ymapInstance)}
           location={location}
           mode="vector"
           theme="dark"
@@ -62,9 +63,9 @@ const MyMap = () => {
           <YMapControls position="bottom left">
             <YMapGeolocationControl />
           </YMapControls>
-          <YMapListener onContextMenu={getMapCords}/>
-          {markers.map((marker: any) => (
-            <YMapDefaultMarker coordinates={marker.coordinates}/>
+          <YMapListener onContextMenu={getMapCords} />
+          {markers.map((marker, index) => (
+            <YMapDefaultMarker key={index} coordinates={marker.coordinates} />
           ))}
         </YMap>
       </YMapComponentsProvider>
@@ -75,9 +76,10 @@ const MyMap = () => {
         setContextVisible={setContextVisible}
         clickMapCords={clickMapCords}
         markers={markers}
-        setMarkers={setMarkers}/>
+        setMarkers={setMarkers} 
+      />
     </div>
   );
-}
+};
 
 export default MyMap;
