@@ -1,11 +1,30 @@
+import { useContainerDimensions } from '../../../hooks/useConteinerDimensions';
 import classes from './index.module.css'
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
-const MyModal = () => {
+type ModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+};
+
+const MyModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+
+  if (!isOpen) return null;
+  
   return (
-    <div className={classes.MyModal}>
-
+    <div className={classes.MyModal} onClick={onClose}>
+      <div 
+        className={classes.content} 
+        onClick={(e) => e.stopPropagation()}
+        >
+        <div className={classes.header} onClick={onClose}>
+            &times;
+        </div>
+        {children}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default MyModal
+export default MyModal;

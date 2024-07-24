@@ -1,52 +1,43 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classes from './index.module.css';
 import axios from 'axios';
 import eventApi from '../../../api/eventApi'
+import { useContainerDimensions } from '../../../hooks/useConteinerDimensions';
 
 interface ContextMenuProps {
   x: number;
   y: number;
-  contextVisible: boolean;
-  setContextVisible: (visible: boolean) => void;
-  clickMapCords: [number, number] | null;
-  markers: { coordinates: [number, number] }[];
-  setMarkers: (markers: { coordinates: [number, number] }[]) => void;
+  isContextOpen: boolean;
+  onClose: () => void;
 }
 
-const ContextMenu: React.FC<ContextMenuProps> = ({ x, y, contextVisible, setContextVisible, clickMapCords, markers, setMarkers }) => {
-  const menuItems = [
-    {
-      title: "Добавить событие в этой точке",
-      action: async () => {
-        if (clickMapCords) {
-          await eventApi.createEvent('test', 'test', clickMapCords, 1)
-          setContextVisible(false);
-        }
-      }
-    },
-    {
-      title: "Посмотреть события вокруг этой точки",
-      action: () => {},
-    },
-  ];
+const ContextMenu: React.FC<ContextMenuProps> = ({x, y, isContextOpen, onClose}) => {
+  
+  const [width, setWidth] = useState<number>(0)
+  const [height, setHeight] = useState<number>(0)
+  
+  const ref = useRef<HTMLHeadingElement>(null)
 
-  if (!contextVisible) return null;
+  useEffect(() => {
+    setWidth(ref.current ? ref.current.offsetWidth : 0)
+    setHeight(ref.current ? ref.current.offsetHeight : 0);
+  }, [ref.current]);
 
+  const calculatePosition = () => {
+  
+  }
+
+  if (!isContextOpen) return null 
   return (
-    <div 
-      style={{ top: `calc(${y}px - 75px)`, left: `${x}px` }}
-      className={classes.ContextMenu}
-      onContextMenu={(e) => e.preventDefault()}
-    >
-      {menuItems.map((item, index) => (
-        <div 
-          key={index}
-          className={classes.menuItem}
-          onClick={item.action}
-        >
-          {item.title}
-        </div>
-      ))}
+    <div
+      onContextMenu={(e) => e.stopPropagation()}
+      ref={ref} 
+      className={classes.ContextMenu} 
+      style={{top: `calc(${y}px - ${height}px)`, left: `${x}px`}}
+      >
+      <div className={classes.header} onClick={onClose}> &times;</div>
+      <div className={classes.menuItem}>Добавить событие в этой точке</div>
+      <div className={classes.menuItem}>Посмотреть события вокруг этой точки</div>
     </div>
   );
 };

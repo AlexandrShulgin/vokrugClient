@@ -7,6 +7,8 @@ import classes from './index.module.css';
 import ContextMenu from "../UI/ContextMenu";
 import axios from "axios";
 import eventApi from "../../api/eventApi";
+import MyModal from "../UI/MyModal";
+import CreateEventForm from "../Forms/CreateEventForm";
 
 interface Location {
   center: LngLat;
@@ -20,10 +22,12 @@ interface Marker {
 const MyMap: React.FC = () => {
   const [location, setLocation] = useState<Location>(LOCATION);
   const [ymap, setYmap] = useState<YMaps.YMap | null>(null);
-  const [contextVisible, setContextVisible] = useState<boolean>(false);
   const [contextPixelCords, setContextPixelCords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [clickMapCords, setClickMapCords] = useState<[number, number] | null>(null);
   const [markers, setMarkers] = useState<Marker[]>([{ coordinates: [37.95, 55.65] }]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [modalContent, setIsModalContent] = useState(<CreateEventForm/>)
+  const [isContextOpen, setIsContextOpen] = useState<boolean>(false)
 
   useEffect(() => {
     eventApi.getAllEvents()
@@ -48,7 +52,7 @@ const MyMap: React.FC = () => {
     event.preventDefault();
     const [x, y] = [event.pageX, event.pageY];
     setContextPixelCords({ x, y });
-    setContextVisible(true);
+    setIsContextOpen(true);
   };
 
   return (
@@ -70,21 +74,22 @@ const MyMap: React.FC = () => {
           <YMapControls position="bottom left">
             <YMapGeolocationControl />
           </YMapControls>
+          <YMapListener onMouseDown={() => setIsContextOpen(false)} />
           <YMapListener onContextMenu={getMapCords} />
           {markers.map((marker, index) => (
             <YMapDefaultMarker key={index} coordinates={marker.coordinates} />
           ))}
         </YMap>
       </YMapComponentsProvider>
+      <MyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {modalContent}
+      </MyModal>
       <ContextMenu 
         x={contextPixelCords.x} 
         y={contextPixelCords.y} 
-        contextVisible={contextVisible} 
-        setContextVisible={setContextVisible}
-        clickMapCords={clickMapCords}
-        markers={markers}
-        setMarkers={setMarkers} 
-      />
+        isContextOpen={isContextOpen} 
+        onClose={() => setIsContextOpen(false)}
+        />
     </div>
   );
 };
