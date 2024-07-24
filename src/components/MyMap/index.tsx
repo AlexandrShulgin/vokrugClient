@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { YMap, YMapComponentsProvider, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapListener, YMapControls, YMapGeolocationControl, YMapZoomControl, YMapDefaultMarker } from "ymap3-components";
 import { location as LOCATION, apiKey } from "./helpers";
 import * as YMaps from "@yandex/ymaps3-types";
 import { LngLat } from "@yandex/ymaps3-types";
 import classes from './index.module.css';
-import ContextMenu from "../ContextMenu";
+import ContextMenu from "../UI/ContextMenu";
+import axios from "axios";
+import eventApi from "../../api/eventApi";
 
 interface Location {
   center: LngLat;
@@ -22,6 +24,11 @@ const MyMap: React.FC = () => {
   const [contextPixelCords, setContextPixelCords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [clickMapCords, setClickMapCords] = useState<[number, number] | null>(null);
   const [markers, setMarkers] = useState<Marker[]>([{ coordinates: [37.95, 55.65] }]);
+
+  useEffect(() => {
+    eventApi.getAllEvents()
+      .then((data) => setMarkers(data))
+  }, [])
 
   const onUpdate = useCallback(({ location, mapInAction }: { location: Location; mapInAction: boolean }) => {
     if (!mapInAction) {

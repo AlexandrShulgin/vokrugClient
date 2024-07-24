@@ -1,5 +1,7 @@
 import React from 'react';
 import classes from './index.module.css';
+import axios from 'axios';
+import eventApi from '../../../api/eventApi'
 
 interface ContextMenuProps {
   x: number;
@@ -15,9 +17,9 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ x, y, contextVisible, setCont
   const menuItems = [
     {
       title: "Добавить событие в этой точке",
-      action: () => {
+      action: async () => {
         if (clickMapCords) {
-          setMarkers([...markers, { coordinates: clickMapCords }]);
+          await eventApi.createEvent('test', 'test', clickMapCords, 1)
           setContextVisible(false);
         }
       }
