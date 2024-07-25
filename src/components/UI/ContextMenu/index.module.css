@@ -26,4 +26,23 @@
 
 .menuItem {
   padding: 10px 15px;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  color: #d1d1d1;
+}
+
+.fade {
+  opacity: 0; /* Начальное состояние - полностью прозрачный */
+  animation: fadeInAnimation 0.5s forwards; /* Анимация длительностью 2 секунды */
+}
+
+@keyframes fadeInAnimation {
+  from {
+      opacity: 0; /* Начало анимации - прозрачный */
+  }
+  to {
+      opacity: 1; /* Конец анимации - полностью непрозрачный */
+  }
 }

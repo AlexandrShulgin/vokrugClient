@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, ReactElement } from "react";
 import { YMap, YMapComponentsProvider, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapListener, YMapControls, YMapGeolocationControl, YMapZoomControl, YMapDefaultMarker } from "ymap3-components";
 import { location as LOCATION, apiKey } from "./helpers";
 import * as YMaps from "@yandex/ymaps3-types";
@@ -26,7 +26,7 @@ const MyMap: React.FC = () => {
   const [clickMapCords, setClickMapCords] = useState<[number, number] | null>(null);
   const [markers, setMarkers] = useState<Marker[]>([{ coordinates: [37.95, 55.65] }]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [modalContent, setIsModalContent] = useState(<CreateEventForm/>)
+  const [modalContent, setIsModalContent] = useState<ReactElement>()
   const [isContextOpen, setIsContextOpen] = useState<boolean>(false)
 
   useEffect(() => {
@@ -54,6 +54,12 @@ const MyMap: React.FC = () => {
     setContextPixelCords({ x, y });
     setIsContextOpen(true);
   };
+
+  const openCreateMarkerModal = () => {
+    setIsContextOpen(false)
+    setIsModalContent(<CreateEventForm/>)
+    setIsModalOpen(true)
+  }
 
   return (
     <div className={classes.Map} onContextMenu={contextMenuHandler}>
@@ -87,8 +93,9 @@ const MyMap: React.FC = () => {
       <ContextMenu 
         x={contextPixelCords.x} 
         y={contextPixelCords.y} 
-        isContextOpen={isContextOpen} 
+        isContextOpen={isContextOpen}
         onClose={() => setIsContextOpen(false)}
+        onCreateMarker={() => openCreateMarkerModal()}
         />
     </div>
   );

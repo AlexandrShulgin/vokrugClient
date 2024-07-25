@@ -1,0 +1,33 @@
+.CreateEventForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 50px;
+  row-gap: 30px;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.categoryIcon {
+  width: 64px;
+  height: 64px;
+
+  border-radius: 50%;
+  background-color: #393D46;
+}
+
+.categoryTitle {
+
+}

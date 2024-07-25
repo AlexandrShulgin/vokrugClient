@@ -17,7 +17,7 @@
 .content {
   display: flex;
   flex-direction: column;
-  background: #111111;
+  background: #222327;
   border-radius: 10px;
   max-width: 500px;
   position: relative;
@@ -27,10 +27,9 @@
   width: 100%;
   padding:  3px 10px;
   font-size: 20px;
-  color: white;
   text-align: right;
 
   border-radius: 10px 10px 0 0;
-  background-color: rgb(48, 48, 48);
+  background-color: #111111;
   cursor: pointer;
 }

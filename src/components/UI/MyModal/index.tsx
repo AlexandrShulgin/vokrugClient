@@ -13,7 +13,7 @@ const MyModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
   
   return (
-    <div className={classes.MyModal} onClick={onClose}>
+    <div className={classes.MyModal} onClick={onClose} onContextMenu={(e) => e.stopPropagation()}>
       <div 
         className={classes.content} 
         onClick={(e) => e.stopPropagation()}
