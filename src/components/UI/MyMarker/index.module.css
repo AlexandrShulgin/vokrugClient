@@ -1,0 +1,43 @@
+.MyMarker {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #ff3333;
+  border-radius: 50%;
+}
+
+.tail {
+  position: absolute;
+  top: 37px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 8px solid #ff3333;
+}
+
+
+.point {
+  margin-top: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 3px solid white;
+  background-color: #ff3333;
+}
+
+.img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #393D46;
+}

@@ -9,6 +9,7 @@ import axios from "axios";
 import eventApi from "../../api/eventApi";
 import MyModal from "../UI/MyModal";
 import CreateEventForm from "../Forms/CreateEventForm";
+import MyMarker from "../UI/MyMarker";
 
 interface Location {
   center: LngLat;
@@ -32,7 +33,7 @@ const MyMap: React.FC = () => {
   useEffect(() => {
     eventApi.getAllEvents()
       .then((data) => setMarkers(data))
-  }, [])
+  }, [isModalOpen])
 
   const onUpdate = useCallback(({ location, mapInAction }: { location: Location; mapInAction: boolean }) => {
     if (!mapInAction) {
@@ -56,9 +57,11 @@ const MyMap: React.FC = () => {
   };
 
   const openCreateMarkerModal = () => {
-    setIsContextOpen(false)
-    setIsModalContent(<CreateEventForm/>)
-    setIsModalOpen(true)
+    if (clickMapCords) {
+      setIsContextOpen(false)
+      setIsModalContent(<CreateEventForm cords={clickMapCords} onClose={() => setIsModalOpen(false)}/>)
+      setIsModalOpen(true)
+    }
   }
 
   return (
@@ -85,6 +88,7 @@ const MyMap: React.FC = () => {
           {markers.map((marker, index) => (
             <YMapDefaultMarker key={index} coordinates={marker.coordinates} />
           ))}
+          <MyMarker/>
         </YMap>
       </YMapComponentsProvider>
       <MyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

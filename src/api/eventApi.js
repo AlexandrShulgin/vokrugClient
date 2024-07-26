@@ -1,11 +1,12 @@
 import axios from "axios";
 
-const createEvent = async (type, description, coordinates, userId) => {
+const createEvent = async ({ type, description, coordinates, address, userId }) => {
   try {
     const response = await axios.post('/api/events', {
       type,
       description,
       coordinates,
+      address,
       userId
     });
     console.log(response.data)
