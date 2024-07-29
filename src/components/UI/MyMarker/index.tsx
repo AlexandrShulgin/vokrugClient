@@ -1,13 +1,35 @@
 import { YMapMarker } from 'ymap3-components'
 import classes from './index.module.css'
 import cross from '../../../img/cross.png'
+import { LngLat } from '@yandex/ymaps3-types'
 
-const MyMarker = () => {
+type MarkerProps = {
+  markerData: {
+    address: {
+      name: string,
+      description: string
+    };
+    coordinates: [number, number];
+    createdAt: Date;
+    description: string;
+    rating: number;
+    time: number;
+    type: string;
+    userId: number;
+    _id: string;
+  },
+  onClick: () => void;
+}
+
+const MyMarker: React.FC<MarkerProps> = ({ markerData, onClick }) => {
+  
+  const cords: LngLat = [markerData.coordinates[0], markerData.coordinates[1]]
+  
   return (
-    <YMapMarker coordinates={[37.95, 55.65]}>
+    <YMapMarker coordinates={cords} onClick={onClick}>
       <div className={classes.MyMarker}>
         <div className={classes.head}>
-          <img className={classes.img} src={cross}/>
+          <div>{markerData.type}</div>
         </div>
         <div className={classes.tail}></div>
         <div className={classes.point}></div>

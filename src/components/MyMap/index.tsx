@@ -10,6 +10,7 @@ import eventApi from "../../api/eventApi";
 import MyModal from "../UI/MyModal";
 import CreateEventForm from "../Forms/CreateEventForm";
 import MyMarker from "../UI/MyMarker";
+import { YMapLocation, YMapLocationRequest, YMapCenterZoomLocation } from "@yandex/ymaps3-types/imperative/YMap";
 
 interface Location {
   center: LngLat;
@@ -17,15 +18,26 @@ interface Location {
 }
 
 interface Marker {
+  address: {
+    name: string,
+    description: string
+  };
   coordinates: [number, number];
+  createdAt: Date;
+  description: string;
+  rating: number;
+  time: number;
+  type: string;
+  userId: number;
+  _id: string;
 }
 
 const MyMap: React.FC = () => {
-  const [location, setLocation] = useState<Location>(LOCATION);
+  const [location, setLocation] = useState<YMapLocationRequest>(LOCATION);
   const [ymap, setYmap] = useState<YMaps.YMap | null>(null);
   const [contextPixelCords, setContextPixelCords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [clickMapCords, setClickMapCords] = useState<[number, number] | null>(null);
-  const [markers, setMarkers] = useState<Marker[]>([{ coordinates: [37.95, 55.65] }]);
+  const [markers, setMarkers] = useState<Marker[]>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [modalContent, setIsModalContent] = useState<ReactElement>()
   const [isContextOpen, setIsContextOpen] = useState<boolean>(false)
@@ -64,6 +76,11 @@ const MyMap: React.FC = () => {
     }
   }
 
+  const anim = async (initialLocation: LngLat, finalLocataion: LngLat, step: number) => {
+    const longDiff = finalLocataion[0] - initialLocation[0]
+    const latDiff = finalLocataion[1] - initialLocation[1]
+  }
+
   return (
     <div className={classes.Map} onContextMenu={contextMenuHandler}>
       <YMapComponentsProvider apiKey={apiKey} lang="ru_RU">
@@ -85,10 +102,13 @@ const MyMap: React.FC = () => {
           </YMapControls>
           <YMapListener onMouseDown={() => setIsContextOpen(false)} />
           <YMapListener onContextMenu={getMapCords} />
-          {markers.map((marker, index) => (
-            <YMapDefaultMarker key={index} coordinates={marker.coordinates} />
+          {markers?.map((marker) => (
+            <MyMarker 
+              key={marker._id} 
+              markerData={marker} 
+              onClick={() => {setLocation({center: marker.coordinates, duration: 400})}}
+              />
           ))}
-          <MyMarker/>
         </YMap>
       </YMapComponentsProvider>
       <MyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
