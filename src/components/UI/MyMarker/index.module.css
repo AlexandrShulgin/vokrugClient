@@ -6,6 +6,8 @@
 }
 
 .head {
+  position: absolute;
+  bottom: 17px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +19,7 @@
 
 .tail {
   position: absolute;
-  top: 37px;
+  bottom: 12px;
   width: 0;
   height: 0;
   border-left: 4px solid transparent;

@@ -1,0 +1,49 @@
+.EventCard {
+  position: absolute;
+  bottom: 17px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  min-width: 300px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #222327;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.type {
+  display: flex;
+  gap: 5px;
+}
+
+.img {
+  width: 32px;
+  height: 32px;
+  background-color: white;
+}
+
+.date {
+
+}
+
+.address {
+
+}
+
+.description {
+
+}
+
+.footer {
+
+}
+
+.buttons {
+
+}
