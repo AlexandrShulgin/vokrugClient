@@ -11,6 +11,7 @@ import MyModal from "../UI/MyModal";
 import CreateEventForm from "../Forms/CreateEventForm";
 import MyMarker from "../UI/MyMarker";
 import { YMapLocation, YMapLocationRequest, YMapCenterZoomLocation } from "@yandex/ymaps3-types/imperative/YMap";
+import Sidebar from "../UI/Sidebar";
 
 interface Location {
   center: LngLat;
@@ -41,11 +42,13 @@ const MyMap: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [modalContent, setIsModalContent] = useState<ReactElement>()
   const [isContextOpen, setIsContextOpen] = useState<boolean>(false)
-
+  const [markerActiveId, setMarkerActiveId] = useState<string>("");
+  const [searchCenter, setSearchCenter] = useState<[number, number] | null>([37.61881923336313, 55.751521468695934])
+  const [searchRadius, setSearchRadius] = useState<number>(100)
   useEffect(() => {
-    eventApi.getAllEvents()
+    eventApi.getEventsInArea({searchCenter, searchRadius})
       .then((data) => setMarkers(data))
-  }, [isModalOpen])
+  }, [isModalOpen, searchCenter, searchRadius])
 
   const onUpdate = useCallback(({ location, mapInAction }: { location: Location; mapInAction: boolean }) => {
     if (!mapInAction) {
@@ -76,9 +79,9 @@ const MyMap: React.FC = () => {
     }
   }
 
-  const anim = async (initialLocation: LngLat, finalLocataion: LngLat, step: number) => {
-    const longDiff = finalLocataion[0] - initialLocation[0]
-    const latDiff = finalLocataion[1] - initialLocation[1]
+  const onMarkerClick = (marker: Marker) => {
+    setLocation({center: marker.coordinates, duration: 400})
+    setMarkerActiveId(marker._id)
   }
 
   return (
@@ -100,13 +103,14 @@ const MyMap: React.FC = () => {
           <YMapControls position="bottom left">
             <YMapGeolocationControl />
           </YMapControls>
-          <YMapListener onMouseDown={() => setIsContextOpen(false)} />
+          <YMapListener onMouseDown={() => {setIsContextOpen(false); setMarkerActiveId("")}} />
           <YMapListener onContextMenu={getMapCords} />
           {markers?.map((marker) => (
             <MyMarker 
               key={marker._id} 
               markerData={marker} 
-              onClick={() => {setLocation({center: marker.coordinates, duration: 400})}}
+              onClick={() => onMarkerClick(marker)}
+              activeId={markerActiveId}
               />
           ))}
         </YMap>
@@ -120,7 +124,9 @@ const MyMap: React.FC = () => {
         isContextOpen={isContextOpen}
         onClose={() => setIsContextOpen(false)}
         onCreateMarker={() => openCreateMarkerModal()}
+        onSetSearchCenter={() => {setSearchCenter(clickMapCords); setIsContextOpen(false)}}
         />
+      <Sidebar markers={markers}/>
     </div>
   );
 };

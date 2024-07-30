@@ -7,9 +7,10 @@ interface ContextMenuProps {
   isContextOpen: boolean;
   onClose: () => void;
   onCreateMarker: () => void;
+  onSetSearchCenter: () => void;
 }
 
-const ContextMenu: React.FC<ContextMenuProps> = ({x, y, isContextOpen, onClose, onCreateMarker}) => {
+const ContextMenu: React.FC<ContextMenuProps> = ({x, y, isContextOpen, onClose, onCreateMarker, onSetSearchCenter}) => {
   
   const [width, setWidth] = useState<number>(0)
   const [height, setHeight] = useState<number>(0)
@@ -34,7 +35,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({x, y, isContextOpen, onClose, 
       >
       <div className={classes.header} onClick={onClose}> &times;</div>
       <div className={classes.menuItem} onClick={onCreateMarker}>Добавить событие в этой точке</div>
-      <div className={classes.menuItem}>Посмотреть события вокруг этой точки</div>
+      <div className={classes.menuItem} onClick={onSetSearchCenter}>Посмотреть события вокруг этой точки</div>
     </div>
   );
 };

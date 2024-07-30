@@ -25,4 +25,14 @@ const getAllEvents = async () => {
   }
 }
 
-export default { createEvent, getAllEvents };
+const getEventsInArea = async ({ searchCenter, searchRadius }) => {
+  console.log(searchCenter, searchRadius)
+  try {
+    const response = await axios.get('/api/events/area', {params: {searchCenter, searchRadius}})
+    return response.data
+  } catch (error) {
+    console.log('Error:', error)
+  }
+}
+
+export default { createEvent, getAllEvents, getEventsInArea };

@@ -13,7 +13,6 @@ root.render(
   <>
     <Auth/>
     <MyMap/>
-    <Sidebar/>
   </>
 );
 

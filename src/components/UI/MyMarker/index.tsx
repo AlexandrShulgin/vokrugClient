@@ -20,18 +20,19 @@ type MarkerProps = {
     _id: string;
   },
   onClick: () => void;
+  activeId: string;
 }
 
-const MyMarker: React.FC<MarkerProps> = ({ markerData, onClick }) => {
+const MyMarker: React.FC<MarkerProps> = ({ markerData, onClick, activeId }) => {
   
   const cords: LngLat = [markerData.coordinates[0], markerData.coordinates[1]]
-  const isActive = true
+  const isActive = markerData._id === activeId
 
   return (
-    <YMapMarker coordinates={cords} onClick={onClick}>
+    <YMapMarker coordinates={cords} onClick={onClick} zIndex={isActive ? 999: 0}>
       <div className={classes.MyMarker}>
         {isActive ? 
-          <EventCard/> :
+          <EventCard markerData={markerData}/> :
           <div className={classes.head}>
             <div>{markerData.type}</div>
           </div>

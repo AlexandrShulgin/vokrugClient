@@ -1,7 +1,6 @@
 .EventCard {
   position: absolute;
   bottom: 17px;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -15,11 +14,19 @@
 .header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 }
 
 .type {
   display: flex;
   gap: 5px;
+
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.type p {
+  margin-top: -1.5px;
 }
 
 .img {
@@ -29,21 +36,42 @@
 }
 
 .date {
-
+  text-align: right;
+  font-size: 13px;
+  color: #919193;
 }
 
 .address {
-
+  font-size: 13px;
+  color: #919193;
 }
 
 .description {
-
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #393D46;
 }
 
 .footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
 
+.footer p {
+  font-size: 13px;
+  color: #919193;
 }
 
 .buttons {
+  display: flex;
+  gap: 10px;
+}
 
+.buttons button {
+  width: 20px;
+  height: 20px;
+  color: #919193;
+  background: none;
+  border: none;
 }
