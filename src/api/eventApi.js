@@ -26,7 +26,6 @@ const getAllEvents = async () => {
 }
 
 const getEventsInArea = async ({ searchCenter, searchRadius }) => {
-  console.log(searchCenter, searchRadius)
   try {
     const response = await axios.get('/api/events/area', {params: {searchCenter, searchRadius}})
     return response.data

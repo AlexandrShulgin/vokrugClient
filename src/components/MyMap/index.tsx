@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, ReactElement } from "react";
-import { YMap, YMapComponentsProvider, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapListener, YMapControls, YMapGeolocationControl, YMapZoomControl, YMapDefaultMarker } from "ymap3-components";
+import { YMap, YMapComponentsProvider, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapListener, YMapControls, YMapGeolocationControl, YMapZoomControl, YMapDefaultMarker, YMapFeature } from "ymap3-components";
 import { location as LOCATION, apiKey } from "./helpers";
 import * as YMaps from "@yandex/ymaps3-types";
 import { LngLat } from "@yandex/ymaps3-types";
@@ -12,6 +12,7 @@ import CreateEventForm from "../Forms/CreateEventForm";
 import MyMarker from "../UI/MyMarker";
 import { YMapLocation, YMapLocationRequest, YMapCenterZoomLocation } from "@yandex/ymaps3-types/imperative/YMap";
 import Sidebar from "../UI/Sidebar";
+import { circle, point } from "@turf/turf";
 
 interface Location {
   center: LngLat;
@@ -44,7 +45,7 @@ const MyMap: React.FC = () => {
   const [isContextOpen, setIsContextOpen] = useState<boolean>(false)
   const [markerActiveId, setMarkerActiveId] = useState<string>("");
   const [searchCenter, setSearchCenter] = useState<[number, number] | null>([37.61881923336313, 55.751521468695934])
-  const [searchRadius, setSearchRadius] = useState<number>(100)
+  const [searchRadius, setSearchRadius] = useState<number>(1000)
   useEffect(() => {
     eventApi.getEventsInArea({searchCenter, searchRadius})
       .then((data) => setMarkers(data))
@@ -84,6 +85,16 @@ const MyMap: React.FC = () => {
     setMarkerActiveId(marker._id)
   }
 
+  const createCircle = (): YMaps.PolygonGeometry => {
+    if (searchCenter) {
+      const area = circle(searchCenter, searchRadius)
+      // @ts-ignore: Unreachable code error
+      return area.geometry
+    } else {
+      return  {type: "Polygon", coordinates: []}
+    }
+  }
+
   return (
     <div className={classes.Map} onContextMenu={contextMenuHandler}>
       <YMapComponentsProvider apiKey={apiKey} lang="ru_RU">
@@ -113,6 +124,7 @@ const MyMap: React.FC = () => {
               activeId={markerActiveId}
               />
           ))}
+          <YMapFeature geometry={createCircle()} style={{fill: "#111111", fillOpacity: 0.1, stroke: [{color: "#111111"}]}}/>
         </YMap>
       </YMapComponentsProvider>
       <MyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
