@@ -1,4 +1,3 @@
-import { useContainerDimensions } from '../../../hooks/useConteinerDimensions';
 import classes from './index.module.css'
 import { ReactNode, useEffect, useRef, useState } from 'react';
 

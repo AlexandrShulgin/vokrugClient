@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, ReactElement } from "react";
 import { YMap, YMapComponentsProvider, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapListener, YMapControls, YMapGeolocationControl, YMapZoomControl, YMapDefaultMarker, YMapFeature } from "ymap3-components";
-import { location as LOCATION, apiKey } from "./helpers";
+import { location as LOCATION, apiKey, locationCenter } from "./helpers";
 import * as YMaps from "@yandex/ymaps3-types";
 import { LngLat } from "@yandex/ymaps3-types";
 import classes from './index.module.css';
@@ -13,6 +13,7 @@ import MyMarker from "../UI/MyMarker";
 import { YMapLocation, YMapLocationRequest, YMapCenterZoomLocation } from "@yandex/ymaps3-types/imperative/YMap";
 import Sidebar from "../UI/Sidebar";
 import { circle, point } from "@turf/turf";
+import MyRange from "../UI/MyRange";
 
 interface Location {
   center: LngLat;
@@ -44,8 +45,8 @@ const MyMap: React.FC = () => {
   const [modalContent, setIsModalContent] = useState<ReactElement>()
   const [isContextOpen, setIsContextOpen] = useState<boolean>(false)
   const [markerActiveId, setMarkerActiveId] = useState<string>("");
-  const [searchCenter, setSearchCenter] = useState<[number, number] | null>([37.61881923336313, 55.751521468695934])
-  const [searchRadius, setSearchRadius] = useState<number>(1000)
+  const [searchCenter, setSearchCenter] = useState<[number, number] | null>(locationCenter)
+  const [searchRadius, setSearchRadius] = useState<number>(100)
   useEffect(() => {
     eventApi.getEventsInArea({searchCenter, searchRadius})
       .then((data) => setMarkers(data))
@@ -57,6 +58,7 @@ const MyMap: React.FC = () => {
         center: location.center,
         zoom: location.zoom,
       });
+      setSearchCenter([location.center[0], location.center[1]])
     }
   }, []);
 
@@ -139,6 +141,13 @@ const MyMap: React.FC = () => {
         onSetSearchCenter={() => {setSearchCenter(clickMapCords); setIsContextOpen(false)}}
         />
       <Sidebar markers={markers}/>
+      <MyRange
+        min={100}
+        max={2000}
+        step={100}
+        value={searchRadius}
+        onChange={setSearchRadius}
+        />
     </div>
   );
 };

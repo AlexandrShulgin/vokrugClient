@@ -1,0 +1,33 @@
+.MyRange {
+  position: fixed;
+  top: 10px;
+  left: 260px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  padding: 20px;
+  
+  border-radius: 10px;
+  background-color: #111111;
+}
+
+input[type="range"] {
+  appearance: none;
+  background: white;
+  border-radius: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none; 
+  /* creating a custom design */
+  height: 15px;
+  width: 15px;
+  background-color: #393D46;
+  border-radius: 50%;
+}
