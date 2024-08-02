@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import classes from './index.module.css'
+import React, { useState } from 'react';
+import classes from './index.module.css';
 
 interface MyRangeProps {
   min: number;
@@ -19,8 +19,8 @@ const MyRange: React.FC<MyRangeProps> = ({ min, max, step, value, onChange }) =>
   };
 
   return (
-    <div className={classes.MyRange} onContextMenu={(e) => e.stopPropagation()}>
-      <span>{internalValue}км</span>
+    <div className={classes.MyRange}>
+      <span>{internalValue} км</span>
       <input
         type="range"
         min={min}
@@ -33,4 +33,4 @@ const MyRange: React.FC<MyRangeProps> = ({ min, max, step, value, onChange }) =>
   );
 };
 
-export default MyRange
+export default MyRange;

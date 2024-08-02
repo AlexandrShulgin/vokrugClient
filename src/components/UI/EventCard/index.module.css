@@ -1,6 +1,7 @@
 .EventCard {
   position: absolute;
   bottom: 17px;
+  
   display: flex;
   flex-direction: column;
   gap: 10px;

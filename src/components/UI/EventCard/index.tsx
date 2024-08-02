@@ -14,6 +14,7 @@ type MarkerProps = {
     time: number;
     type: string;
     userId: number;
+    name: string;
     _id: string;
   },
   style?: CSSProperties
@@ -51,7 +52,7 @@ const EventCard: React.FC<MarkerProps> = ({ markerData, style }) => {
       </div>
       <div className={classes.description}>{markerData.description}</div>
       <div className={classes.footer}>
-        <p>@{markerData.userId}</p>
+        <p>@{markerData.name}</p>
         <div className={classes.buttons}>
           <button>+</button>
           <button>-</button>

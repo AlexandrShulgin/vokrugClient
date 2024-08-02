@@ -1,4 +1,4 @@
-import { YMapLocation, YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap";
+import { YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap";
 
 
 export const location: YMapLocationRequest = { center: [37.95, 55.65], zoom: 10, duration: 200 };
