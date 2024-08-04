@@ -7,7 +7,7 @@ import { circle } from "@turf/turf";
 import { YMapLocationRequest } from "@yandex/ymaps3-types/imperative/YMap";
 import { LngLat } from "@yandex/ymaps3-types";
 import * as YMaps from "@yandex/ymaps3-types";
-
+import { MyEvent, User } from '../../types/types';
 import MyRange from "../UI/MyRange";
 import Sidebar from "../UI/Sidebar";
 import MyMarker from "../UI/MyMarker";
@@ -18,33 +18,14 @@ import CreateEventForm from "../Forms/CreateEventForm";
 import { location as LOCATION, apiKey, locationCenter } from "./helpers";
 import eventApi from "../../api/eventApi";
 import YLoginButton from '../Auth/YLoginButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { setUser } from '../../store/slices/userSlice';
+import { setEvents } from '../../store/slices/eventSlice';
 
 interface Location {
   center: LngLat;
   zoom: number;
-}
-
-interface Marker {
-  address: {
-    name: string,
-    description: string
-  };
-  coordinates: [number, number];
-  createdAt: Date;
-  description: string;
-  rating: number;
-  time: number;
-  type: string;
-  userId: number;
-  name: string;
-  _id: string;
-}
-
-interface User {
-  y_id: string
-  email: string,
-  name: string,
-  avatar: string,
 }
 
 const MyMap: React.FC = () => {
@@ -52,32 +33,35 @@ const MyMap: React.FC = () => {
   const [ymap, setYmap] = useState<YMaps.YMap | null>(null);
   const [contextPixelCords, setContextPixelCords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [clickMapCords, setClickMapCords] = useState<[number, number]>(locationCenter);
-  const [markers, setMarkers] = useState<Marker[]>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setIsModalContent] = useState<ReactElement | null>(null);
   const [isContextOpen, setIsContextOpen] = useState<boolean>(false);
   const [markerActiveId, setMarkerActiveId] = useState<string>("");
   const [searchCenter, setSearchCenter] = useState<[number, number]>(locationCenter);
   const [searchRadius, setSearchRadius] = useState<number>(100);
-  const [currentUser, setCurrentUser] = useState<User>()
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state: RootState) => state.user);
+  const events = useSelector((state: RootState) => state.events.events)
+
   useEffect(() => {
     eventApi.getEventsInArea({ searchCenter, searchRadius })
-      .then((data) => setMarkers(data));
-  }, [isModalOpen, searchCenter, searchRadius]);
+      .then((data) => dispatch(setEvents(data)));
+  }, [isModalOpen, searchCenter, searchRadius, markerActiveId, dispatch]);
 
   useEffect(() => {
     if (localStorage.user) {
       const getUser = JSON.parse(localStorage.user)
-      setCurrentUser({
-        y_id: getUser.y_id,
+      const userData = {
+        _id: getUser._id,
         email: getUser.email,
         name: getUser.display_name,
         avatar: getUser.avatar_id,
-      })
+      }
+      dispatch(setUser(userData));
     }
-  }, [localStorage])
+  }, [dispatch])
 
   const onUpdate = useCallback(({ location, mapInAction }: { location: Location; mapInAction: boolean }) => {
     if (!mapInAction) {
@@ -108,7 +92,7 @@ const MyMap: React.FC = () => {
         <CreateEventForm 
           cords={clickMapCords} 
           onClose={() => setIsModalOpen(false)} 
-          y_id={Number(currentUser?.y_id)}
+          id={currentUser?._id}
           name={currentUser?.name}
           />
       );
@@ -116,7 +100,7 @@ const MyMap: React.FC = () => {
     }
   };
 
-  const onMarkerClick = (marker: Marker) => {
+  const onMarkerClick = (marker: MyEvent) => {
     setLocation({ center: marker.coordinates, duration: 400 });
     setMarkerActiveId(marker._id);
   };
@@ -133,7 +117,7 @@ const MyMap: React.FC = () => {
   return (
     <>
      <div className={classes.cover}>
-        <Sidebar markers={markers} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}/>
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}/>
         <YLoginButton currentUser={currentUser}/>
         <MyRange
           min={100}
@@ -167,11 +151,11 @@ const MyMap: React.FC = () => {
           )}
           <YMapListener onMouseDown={() => { setIsContextOpen(false); setMarkerActiveId(""); }} />
           <YMapListener onContextMenu={getMapCords} />
-          {markers?.map((marker) => (
+          {events?.map((event) => (
             <MyMarker
-              key={marker._id}
-              markerData={marker}
-              onClick={() => onMarkerClick(marker)}
+              key={event._id}
+              markerData={event}
+              onClick={() => onMarkerClick(event)}
               activeId={markerActiveId}
             />
           ))}

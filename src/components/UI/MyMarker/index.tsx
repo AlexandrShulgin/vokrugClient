@@ -3,23 +3,10 @@ import { YMapMarker } from 'ymap3-components';
 import classes from './index.module.css';
 import { LngLat } from '@yandex/ymaps3-types';
 import EventCard from '../EventCard';
+import { MyEvent } from '../../../types/types';
 
 interface MarkerProps {
-  markerData: {
-    address: {
-      name: string;
-      description: string;
-    };
-    coordinates: [number, number];
-    createdAt: Date;
-    description: string;
-    rating: number;
-    time: number;
-    type: string;
-    userId: number;
-    name: string;
-    _id: string;
-  };
+  markerData: MyEvent
   onClick: () => void;
   activeId: string;
 }
@@ -27,7 +14,7 @@ interface MarkerProps {
 const MyMarker: React.FC<MarkerProps> = ({ markerData, onClick, activeId }) => {
   const cords: LngLat = [markerData.coordinates[0], markerData.coordinates[1]];
   const isActive = markerData._id === activeId;
-
+  
   return (
     <YMapMarker coordinates={cords} onClick={onClick} zIndex={isActive ? 999 : 0}>
       <div className={classes.point}></div>

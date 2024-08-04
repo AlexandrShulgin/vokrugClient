@@ -10,7 +10,7 @@ const categories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 type CreateEventFormProps = {
   cords: [number, number];
   onClose: () => void;
-  y_id?: number;
+  id?: string;
   name?: string;
 };
 
@@ -19,7 +19,7 @@ interface Address {
   description: string;
 }
 
-const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, y_id, name }) => {
+const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, name }) => {
   const [address, setAddress] = useState<Address>({ name: '', description: '' });
   const [type, setType] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -43,7 +43,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, y_id,
       description,
       coordinates: cords,
       address,
-      userId: y_id ? y_id : 0,
+      userId: id ? id : '0',
       name: name ? name : "anonym",
     });
     onClose();

@@ -6,7 +6,7 @@ interface YLoginButtonProps {
 }
 
 interface User {
-  y_id: string
+  _id: string
   email: string,
   name: string,
   avatar: string,
@@ -24,7 +24,7 @@ const YLoginButton: React.FC<YLoginButtonProps> = ({ currentUser }) => {
 
   return (
     <>
-      {currentUser ? 
+      {currentUser?._id ? 
       <div className={classes.YLoginButton}>
         <img src={`https://avatars.yandex.net/get-yapic/${currentUser.avatar}/islands-middle`} alt="user"/>
         <div className={classes.userInfo}>

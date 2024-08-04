@@ -66,13 +66,27 @@
 
 .buttons {
   display: flex;
-  gap: 10px;
 }
 
 .buttons button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 20px;
   height: 20px;
+  border-radius: 5px;
   color: #919193;
   background: none;
   border: none;
+}
+
+.icon {
+  width: 15px;
+  height: 15px;
+}
+
+.counter {
+  font-size: 10px;
+  color: #919193;
+  align-self: flex-end;
 }

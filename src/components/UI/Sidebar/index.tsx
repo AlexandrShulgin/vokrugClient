@@ -2,30 +2,19 @@ import React, { useState } from 'react';
 import classes from './index.module.css';
 import EventCard from '../EventCard';
 import arrow from '../../../img/arrow.png'
-
-interface Marker {
-  address: {
-    name: string;
-    description: string;
-  };
-  coordinates: [number, number];
-  createdAt: Date;
-  description: string;
-  rating: number;
-  time: number;
-  type: string;
-  userId: number;
-  name: string;
-  _id: string;
-}
+import { MyEvent } from '../../../types/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/store';
 
 interface SidebarProps {
-  markers: Marker[] | undefined;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ markers, isOpen, setIsOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+  
+  const events = useSelector((state: RootState) => state.events.events)
+
   return (
     <div className={[classes.Sidebar, !isOpen && classes.closed].join(' ')}>
       <button
@@ -39,8 +28,8 @@ const Sidebar: React.FC<SidebarProps> = ({ markers, isOpen, setIsOpen }) => {
         <div className={classes.search}>
           <input type='text'/>
         </div>
-        {markers?.map((marker) => (
-          <EventCard key={marker._id} markerData={marker} style={{ position: 'unset' }} />
+        {events?.map((event) => (
+          <EventCard key={event._id} markerData={event} style={{ position: 'unset' }} />
         ))}
       </div>
     </div>
