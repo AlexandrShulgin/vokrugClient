@@ -7,14 +7,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 
 interface SidebarProps {
+  events: MyEvent[] | undefined;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ events, isOpen, setIsOpen }) => {
   
-  const events = useSelector((state: RootState) => state.events.events)
-
   return (
     <div className={[classes.Sidebar, !isOpen && classes.closed].join(' ')}>
       <button

@@ -20,7 +20,7 @@ const MyMarker: React.FC<MarkerProps> = ({ markerData, onClick, activeId }) => {
       <div className={classes.point}></div>
       <div className={classes.MyMarker}>
         {isActive ? (
-          <EventCard markerData={markerData} style={{ position: 'absolute' }} />
+          <EventCard activeId={activeId} markerData={markerData} style={{ position: 'absolute' }} />
         ) : (
           <div className={classes.head}>
             <div>{markerData.type}</div>
