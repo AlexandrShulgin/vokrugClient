@@ -1,0 +1,27 @@
+.AddCommentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hr {
+  height: 2px;
+  border-radius: 5px;
+  background-color: #393D46;
+}
+
+.comment {
+  font-size: 15px;
+  color: #919193
+}
+
+.submit {
+  align-self: flex-end;
+  width: 100px;
+  height: 30px;
+
+  border: none;
+  border-radius: 10px;
+  background: #919193;
+}
+

@@ -90,3 +90,9 @@
   color: #919193;
   align-self: flex-end;
 }
+
+.comment {
+  margin-top: 10px;
+  font-size: 15px;
+  color: #919193;
+}

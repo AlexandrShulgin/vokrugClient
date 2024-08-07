@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, CSSProperties } from 'react';
 import classes from './index.module.css'
 
 interface MyTextareaProps {
@@ -8,6 +8,7 @@ interface MyTextareaProps {
   rows?: number;
   cols?: number;
   maxLength?: number;
+  style?: CSSProperties;
 }
 
 const MyTextarea: React.FC<MyTextareaProps> = ({
@@ -15,6 +16,7 @@ const MyTextarea: React.FC<MyTextareaProps> = ({
   placeholder = '',
   onChange,
   maxLength = 250,
+  style
 }) => {
   const [text, setText] = useState(value);
 
@@ -34,6 +36,7 @@ const MyTextarea: React.FC<MyTextareaProps> = ({
       placeholder={placeholder}
       onChange={handleChange}
       maxLength={maxLength}
+      style={style}
     />
   );
 };

@@ -4,6 +4,10 @@ import classes from './index.module.css';
 import { LngLat } from '@yandex/ymaps3-types';
 import EventCard from '../EventCard';
 import { MyEvent } from '../../../types/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/store';
+import { useDispatch } from 'react-redux';
+import { setIsCommentOpen, setIsSidebarOpen } from '../../../store/slices/refSlice';
 
 interface MarkerProps {
   markerData: MyEvent
@@ -14,13 +18,26 @@ interface MarkerProps {
 const MyMarker: React.FC<MarkerProps> = ({ markerData, onClick, activeId }) => {
   const cords: LngLat = [markerData.coordinates[0], markerData.coordinates[1]];
   const isActive = markerData._id === activeId;
-  
+  const sidebarRef = useSelector((state: RootState) => state.ref);
+  const dispatch = useDispatch()
+
+  const handleCommentClick = (id: string, ref: React.MutableRefObject<HTMLDivElement | null>) => {
+    dispatch(setIsSidebarOpen(true))
+    dispatch(setIsCommentOpen(markerData._id))
+    const element = document.getElementById(id);
+    if (element && ref.current) {
+      ref.current.scrollTo({
+        top: element.offsetTop,
+      });
+    }
+  };
+
   return (
     <YMapMarker coordinates={cords} onClick={onClick} zIndex={isActive ? 999 : 0}>
       <div className={classes.point}></div>
       <div className={classes.MyMarker}>
         {isActive ? (
-          <EventCard activeId={activeId} markerData={markerData} style={{ position: 'absolute' }} />
+          <EventCard id={markerData._id} activeId={activeId} markerData={markerData} style={{ position: 'absolute' }} onComment={() => handleCommentClick(markerData._id, sidebarRef)}/>
         ) : (
           <div className={classes.head}>
             <div>{markerData.type}</div>

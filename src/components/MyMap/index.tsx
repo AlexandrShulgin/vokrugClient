@@ -39,12 +39,13 @@ const MyMap: React.FC = () => {
   const [markerActiveId, setMarkerActiveId] = useState<string>("");
   const [searchCenter, setSearchCenter] = useState<[number, number]>(locationCenter);
   const [searchRadius, setSearchRadius] = useState<number>(100);
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const [events, setEvents] = useState<MyEvent[]>()
   
   const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.user);
-  
+
+  const isSidebarOpen = useSelector((state: RootState) => state.ref.isSidebarOpen)
+
   useEffect(() => {
     eventApi.getEventsInArea({ searchCenter, searchRadius })
       .then((data) => setEvents(data));
@@ -117,7 +118,7 @@ const MyMap: React.FC = () => {
   return (
     <>
      <div className={classes.cover}>
-        <Sidebar events={events} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}/>
+        <Sidebar events={events} isOpen={isSidebarOpen}/>
         <YLoginButton currentUser={currentUser}/>
         <MyRange
           min={100}

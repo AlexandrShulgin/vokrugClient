@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import classes from "./index.module.css"
 import comment from "../../../img/comment.png"
 import plusInactive from "../../../img/plusInactive.png"
@@ -6,25 +6,44 @@ import plusActive from "../../../img/plusActive.png"
 import reportActive from "../../../img/reportActive.png"
 import reportInactive from "../../../img/reportInactive.png"
 import eventApi from "../../../api/eventApi";
-import { MyEvent } from "../../../types/types";
+import { MyEvent, User } from "../../../types/types";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
+import CommentCard from "../СommentCard";
+import AddCommentForm from "../../Forms/AddCommentForm";
+import { useDispatch } from "react-redux";
+import { setIsCommentOpen } from "../../../store/slices/refSlice";
+import commentApi from '../../../api/commentApi';
+import CommentSection from "../../CommentSection";
+import { dateToString } from "../../../utils";
 
 type MarkerProps = {
   markerData?: MyEvent;
   style?: CSSProperties;
-  activeId?: string
+  activeId?: string;
+  id: string
+  onComment?: () => void
 }
 
-const EventCard: React.FC<MarkerProps> = ({ activeId, style, markerData }) => {
-  
+interface Comment {
+  _id: string;
+  author: User;
+  event: string;
+  text: string;
+  createdAt: string
+}
+
+const EventCard: React.FC<MarkerProps> = ({id, activeId, style, markerData, onComment }) => {
+
+  const dispatch = useDispatch()
   const currentUser = useSelector((state: RootState) => state.user);
- 
+  const isCommentOpen = useSelector((state: RootState) => state.ref.isCommentOpen)
   const [event, setEvent] = useState<MyEvent>()
   const [pluses, setPluses] = useState<number>()
   const [reports, setReports] = useState<number>()
   const [isPlusClicked, setIsPlusClicked] = useState<boolean>()
   const [isReportClicked, setIsReportClicked] = useState<boolean>()
+  const [rerender, setRerender] = useState<boolean>(false)
 
   useEffect(() => {
     if (activeId) {
@@ -42,18 +61,6 @@ const EventCard: React.FC<MarkerProps> = ({ activeId, style, markerData }) => {
     setIsReportClicked(event?.reports.find((item) => item === currentUser._id) ? true : false)
   }, [event])
 
-  const dateToString = (date: Date) => {
-    const dateLocal = new Date(date)
-    const dd = dateLocal.getDate() < 10 ? `0${dateLocal.getDate()}` : dateLocal.getDate() 
-    const mm = dateLocal.getMonth() + 1 < 10 ? `0${dateLocal.getMonth() + 1}` : dateLocal.getMonth() + 1
-    const yyyy = dateLocal.getFullYear()
-    const hh = dateLocal.getHours() < 10 ? `0${dateLocal.getHours()}` : dateLocal.getHours()
-    const mimi = dateLocal.getMinutes() < 10 ? `0${dateLocal.getMinutes()}` : dateLocal.getMinutes()
-    const dd_mm_yyyy = `${dd}-${mm}-${yyyy}`
-    const hh_mimi = `${hh}:${mimi}`
-    return [dd_mm_yyyy, hh_mimi]
-  }
-  
   const plusHandler = () => {
     if (isReportClicked) {
       reportHandler()
@@ -90,8 +97,24 @@ const EventCard: React.FC<MarkerProps> = ({ activeId, style, markerData }) => {
     }
   }
 
+  const commentClickHandler = () => {
+    if (onComment) {
+      onComment()
+    }
+    if (style?.position === 'unset') {
+      if (isCommentOpen === id) {
+        dispatch(setIsCommentOpen(''))
+      } else {
+        dispatch(setIsCommentOpen(id))
+      }
+    } else {
+      dispatch(setIsCommentOpen(id))
+    }
+    
+  }
+
   return (
-    <div className={classes.EventCard} style={style} onMouseDown={(e) => e.stopPropagation()}>
+    <div id={id} className={classes.EventCard} style={style} onMouseDown={(e) => e.stopPropagation()}>
       {event && <>
       <div className={classes.header}>
         <div className={classes.type}>
@@ -111,13 +134,24 @@ const EventCard: React.FC<MarkerProps> = ({ activeId, style, markerData }) => {
       <div className={classes.footer}>
         <p>@{event.name}</p>
         <div className={classes.buttons}>
-          <button onClick={plusHandler}><img className={classes.icon} src={isPlusClicked ? plusActive : plusInactive} alt="plus"/></button>
+          <button onClick={plusHandler}>
+            <img className={classes.icon} src={isPlusClicked ? plusActive : plusInactive} alt="plus"/>
+          </button>
           <div style={{marginLeft: '-3px', marginRight: '15px'}} className={classes.counter}>{pluses}</div>
-          <button onClick={reportHandler}><img style={{marginTop: "2px"}} className={classes.icon} src={isReportClicked ? reportActive : reportInactive} alt="report"/></button>
+
+          <button onClick={reportHandler}>
+            <img style={{marginTop: "2px"}} className={classes.icon} src={isReportClicked ? reportActive : reportInactive} alt="report"/>
+          </button>
           <div style={{marginRight: '15px'}} className={classes.counter}>{reports}</div>
-          <button><img className={classes.icon} src={comment} alt="comment"/></button>
+          
+          <button onClick={commentClickHandler}>
+            <img className={classes.icon} src={comment} alt="comment"/>
+          </button>
         </div>
       </div> </>}
+      {style?.position === 'unset' && isCommentOpen === id && event &&
+        <CommentSection eventId={event._id}/>
+      }
     </div>
   )
 }
