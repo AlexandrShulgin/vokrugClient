@@ -4,7 +4,7 @@ import classes from './index.module.css';
 import commentApi from '../../../api/commentApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-
+import clip from '../../../img/clip.png'
 interface CommentProps {
   eventId: string;
 }
@@ -48,7 +48,17 @@ const AddCommentForm = ({ eventId }: CommentProps) => {
           placeholder='Комментарий...'
           style={{ height: '100px' }}
         />
-        <input type="file" accept="image/*,video/*" onChange={handleMediaChange} />
+        <div className={classes.uploadSection}>
+          <label htmlFor="file-upload" className={classes.file}>
+            <p className={classes.toUpload}>Прикрепить фото/видео</p>
+            <img className={classes.upload} src={clip} alt='upload'/>
+          </label>
+          <div className={classes.filenames}>
+            <div>{media?.name}</div>
+          </div>
+        </div>
+        <input id="file-upload" type="file" accept="image/*,video/*" onChange={handleMediaChange} />
+        
         <button className={classes.submit} type='submit'>Отправить</button>
       </div>
     </form>

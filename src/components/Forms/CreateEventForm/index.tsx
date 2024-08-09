@@ -5,6 +5,7 @@ import MyButton from '../../UI/MyButton';
 import axios from 'axios';
 import eventApi from '../../../api/eventApi';
 import { categories } from '../../../utils';
+import clip from '../../../img/clip.png'
 
 type CreateEventFormProps = {
   cords: [number, number];
@@ -97,7 +98,21 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
           value={description}
           onChange={setDescription}
         />
-        <input type="file" multiple accept="image/*,video/*" onChange={handleMediaChange} />
+        <div className={classes.uploadSection}>
+          <label htmlFor="file-upload" className={classes.file}>
+            <p className={classes.toUpload}>Прикрепить фото/видео</p>
+            <img className={classes.upload} src={clip} alt='upload'/>
+          </label>
+          <div className={classes.filenames}>
+          {media.map((item, index) => 
+            <div>
+              {index < 2 ? <div>{item.name}</div> : ''}
+            </div>
+          )}
+          {media.length > 2 && <div>И еще {media.length - 2} файла(ов)</div>}
+          </div>
+        </div>
+        <input id="file-upload" type="file" multiple accept="image/*,video/*" onChange={handleMediaChange} />
         
         <MyButton width='100%' height='35px' type='submit'>
           Подтвердить

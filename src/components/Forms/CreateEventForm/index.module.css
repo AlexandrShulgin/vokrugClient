@@ -74,3 +74,35 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+.toUpload {
+  font-size: 15px;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.uploadSection {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.file {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload {
+  width: 25px;
+  height: 25px;
+}
+
+.filenames {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}

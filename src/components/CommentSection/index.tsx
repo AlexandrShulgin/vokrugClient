@@ -22,8 +22,6 @@ const CommentSection = ({ eventId }: CommentSectionProps) => {
       .then((data) => {
         if (data?.success) {
           setComments(data.comments);
-        } else {
-          setError("Не удалось загрузить комментарии.");
         }
       })
       .catch(() => {
