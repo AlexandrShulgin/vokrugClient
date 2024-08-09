@@ -1,3 +1,62 @@
+import fire from './img/fire.png'
+import concert from './img/concert.png'
+import culture from './img/culture.png'
+import danger from './img/danger.png'
+import explosion from './img/explosion.png'
+import flooding from './img/flooding.png'
+import gunfire from './img/gunfire.png'
+import party from './img/party.png'
+import sports from './img/sports.png'
+import stray from './img/stray.png'
+import tornado from './img/tornado.png'
+
+export const categories = [
+  {
+    type: 'Пожар',
+    src: fire
+  },
+  {
+    type: 'Выступление',
+    src: concert
+  },
+  {
+    type: 'Культурное мероприятие',
+    src: culture
+  },
+  {
+    type: 'Опасность',
+    src: danger
+  },
+  {
+    type: 'Взрыв',
+    src: explosion
+  },
+  {
+    type: 'Затопление',
+    src: flooding
+  },
+  {
+    type: 'Стрельба',
+    src: gunfire
+  },
+  {
+    type: 'Вечеринка',
+    src: party
+  },
+  {
+    type: 'Спортивное мероприятие',
+    src: sports
+  },
+  {
+    type: 'Бродячие животные',
+    src: stray
+  },
+  {
+    type: 'Ураган',
+    src: tornado
+  },
+  
+]
 export const dateToString = (date: Date) => {
   const dateLocal = new Date(date)
   const dd = dateLocal.getDate() < 10 ? `0${dateLocal.getDate()}` : dateLocal.getDate() 

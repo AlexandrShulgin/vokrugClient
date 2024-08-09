@@ -4,8 +4,7 @@ import classes from './index.module.css';
 import MyButton from '../../UI/MyButton';
 import axios from 'axios';
 import eventApi from '../../../api/eventApi';
-
-const categories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+import { categories } from '../../../utils';
 
 type CreateEventFormProps = {
   cords: [number, number];
@@ -23,6 +22,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
   const [address, setAddress] = useState<Address>({ name: '', description: '' });
   const [type, setType] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [media, setMedia] = useState<File[]>([]);
 
   useEffect(() => {
     axios
@@ -36,7 +36,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
       });
   }, [cords]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     eventApi.createEvent({
       type,
@@ -45,12 +45,19 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
       address,
       userId: id ? id : '0',
       name: name ? name : "anonym",
-    });
-    onClose();
+      media
+    })
+    .finally(() => onClose());
+  };
+
+  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setMedia([...media, ...Array.from(e.target.files)]);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} encType="multipart/form-data">
       <div className={classes.CreateEventForm}>
         <h1>Добавить новое событие</h1>
         <div className={classes.address}>
@@ -59,15 +66,15 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
         </div>
         <div className={classes.categories}>
           {categories.map((category) => (
-            <div key={category} className={classes.categoryItem}>
+            <div key={category.type} className={classes.categoryItem}>
               <div
                 className={classes.categoryIcon}
-                onClick={() => setType(category.toString())}
-                style={type === category.toString() ? { outline: '3px solid white' } : {}}
+                onClick={() => setType(category.type.toString())}
+                style={type === category.type.toString() ? { outline: '3px solid white' } : {}}
               >
-                {category}
+                <img src={category.src} alt={category.type} className={classes.categoryImg}/>
               </div>
-              <p className={classes.categoryTitle}>{category}</p>
+              <p className={classes.categoryTitle}>{category.type}</p>
             </div>
           ))}
         </div>
@@ -76,6 +83,8 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
           value={description}
           onChange={setDescription}
         />
+        <input type="file" multiple accept="image/*,video/*" onChange={handleMediaChange} />
+        
         <MyButton width='100%' height='35px' type='submit'>
           Подтвердить
         </MyButton>

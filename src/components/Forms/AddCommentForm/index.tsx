@@ -12,15 +12,26 @@ interface CommentProps {
 
 const AddCommentForm = ({ eventId }: CommentProps) => {
   const [comment, setComment] = useState<string>()
+  const [media, setMedia] = useState<File>();
 
   const currentUser = useSelector((state: RootState) => state.user);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (comment) {
-      commentApi.createComment({authorId: currentUser._id, eventId, text: comment})
+      if (media) {
+        commentApi.createComment({authorId: currentUser._id, eventId, text: comment, media})
+      } else {
+        commentApi.createComment({authorId: currentUser._id, eventId, text: comment})
+      }
     }
   }
+
+  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setMedia(e.target.files[0]);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -32,6 +43,7 @@ const AddCommentForm = ({ eventId }: CommentProps) => {
           placeholder='Комментарий...' 
           style={{height: '100px'}}
           />
+        <input type="file" accept="image/*,video/*" onChange={handleMediaChange} />
         <button className={classes.submit} type='submit'>Отправить</button>
       </div>
     </form>

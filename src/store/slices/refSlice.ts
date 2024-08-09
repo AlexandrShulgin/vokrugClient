@@ -4,12 +4,14 @@ interface SidebarState {
   current: HTMLDivElement | null;
   isSidebarOpen: boolean
   isCommentOpen: string
+  isMediaOpen: string
 }
 
 const initialState: SidebarState = {
   current: null,
   isSidebarOpen: false,
   isCommentOpen: '',
+  isMediaOpen: '',
 };
 
 const sidebarSlice = createSlice({
@@ -24,9 +26,12 @@ const sidebarSlice = createSlice({
     },
     setIsCommentOpen(state, action: PayloadAction<string>) {
       state.isCommentOpen = action.payload
-    }
+    },
+    setIsMediaOpen(state, action: PayloadAction<string>) {
+      state.isMediaOpen = action.payload
+    },
   },
 });
 
-export const { setSidebarRef, setIsSidebarOpen, setIsCommentOpen } = sidebarSlice.actions;
+export const { setSidebarRef, setIsSidebarOpen, setIsCommentOpen, setIsMediaOpen } = sidebarSlice.actions;
 export default sidebarSlice.reducer;

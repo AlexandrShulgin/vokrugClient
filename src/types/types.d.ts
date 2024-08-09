@@ -21,3 +21,16 @@ export interface User {
   name: string,
   avatar: string,
 }
+
+export interface Comment {
+  id: string;
+  text: string;
+  media: string[];
+  createdAt: Date;
+
+  author: {
+    display_name: string;
+    email: string;
+    avatar_id: string;
+  };
+}

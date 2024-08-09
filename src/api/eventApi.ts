@@ -9,7 +9,8 @@ interface EventData {
     description: string;
   };
   userId: string;
-  name: string
+  name: string;
+  media: File[];
 }
 
 interface SearchAreaParams {
@@ -22,16 +23,25 @@ interface plusEvent {
   userId: string,
 }
 
-const createEvent = async ({ type, description, coordinates, address, userId, name }: EventData) => {
-  try {
-    const response = await axios.post('/api/events/create', {
-      type,
-      description,
-      coordinates,
-      address,
-      userId,
-      name,
+const createEvent = async ({ type, description, coordinates, address, userId, name, media }: EventData) => {
+  
+  const formData = new FormData();
+    formData.append('type', type);
+    formData.append('description', description);
+    formData.append('coordinates', JSON.stringify(coordinates));
+    formData.append('address', JSON.stringify(address));
+    formData.append('userId', userId);
+    formData.append('name', name);
+    media.forEach(file => {
+      formData.append('media', file);
     });
+  try {
+    const response = await axios.post('/api/events/create', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
     console.log(response.data);
   } catch (error) {
     console.error('Error:', error);

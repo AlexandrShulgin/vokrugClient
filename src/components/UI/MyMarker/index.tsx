@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useDispatch } from 'react-redux';
 import { setIsCommentOpen, setIsSidebarOpen } from '../../../store/slices/refSlice';
+import { categories } from '../../../utils';
 
 interface MarkerProps {
   markerData: MyEvent
@@ -40,7 +41,11 @@ const MyMarker: React.FC<MarkerProps> = ({ markerData, onClick, activeId }) => {
           <EventCard id={markerData._id} activeId={activeId} markerData={markerData} style={{ position: 'absolute' }} onComment={() => handleCommentClick(markerData._id, sidebarRef)}/>
         ) : (
           <div className={classes.head}>
-            <div>{markerData.type}</div>
+            <img 
+              className={classes.category}
+              src={categories.find((category) => category.type === markerData.type)?.src} 
+              alt={categories.find((category) => category.type === markerData.type)?.type}
+              />
           </div>
         )}
         <div className={classes.tail} style={{ borderTop: isActive ? '8px solid #222327' : '8px solid #ff3333' }}></div>

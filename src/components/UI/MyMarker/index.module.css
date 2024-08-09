@@ -43,3 +43,9 @@
   border-radius: 50%;
   background-color: #393D46;
 }
+
+.category {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}

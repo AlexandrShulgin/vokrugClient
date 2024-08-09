@@ -16,7 +16,6 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ events, isOpen }) => {
   
   const sidebarRef = useRef<HTMLDivElement | null>(null);
-  
   const dispatch = useDispatch();
   
   useEffect(() => {

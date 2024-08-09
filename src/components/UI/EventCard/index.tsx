@@ -16,6 +16,9 @@ import { setIsCommentOpen } from "../../../store/slices/refSlice";
 import commentApi from '../../../api/commentApi';
 import CommentSection from "../../CommentSection";
 import { dateToString } from "../../../utils";
+import MediaSection from "../../MediaSection";
+import { categories } from "../../../utils";
+import Spinner from "../Spinner";
 
 type MarkerProps = {
   markerData?: MyEvent;
@@ -43,14 +46,17 @@ const EventCard: React.FC<MarkerProps> = ({id, activeId, style, markerData, onCo
   const [reports, setReports] = useState<number>()
   const [isPlusClicked, setIsPlusClicked] = useState<boolean>()
   const [isReportClicked, setIsReportClicked] = useState<boolean>()
-  const [rerender, setRerender] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
+    setLoading(true)
     if (activeId) {
       eventApi.getEventById(activeId)
       .then((data) => setEvent(data))
+      .finally(() => setLoading(false))
     } else if (markerData) {
       setEvent(markerData)
+      setLoading(false)
     }
   }, [])
 
@@ -110,15 +116,18 @@ const EventCard: React.FC<MarkerProps> = ({id, activeId, style, markerData, onCo
     } else {
       dispatch(setIsCommentOpen(id))
     }
-    
   }
 
   return (
     <div id={id} className={classes.EventCard} style={style} onMouseDown={(e) => e.stopPropagation()}>
-      {event && <>
+      {event ? <>
       <div className={classes.header}>
         <div className={classes.type}>
-          <div className={classes.img}></div>
+          <img
+            className={classes.img}
+            src={categories.find((category) => category.type === event.type)?.src} 
+            alt={categories.find((category) => category.type === event.type)?.type}
+          />
           <p>{event?.type}</p>
         </div>
         <div className={classes.date}>
@@ -131,6 +140,7 @@ const EventCard: React.FC<MarkerProps> = ({id, activeId, style, markerData, onCo
         <div>{event.address.description}</div>
       </div>
       <div className={classes.description}>{event.description}</div>
+      <MediaSection eventId={event._id} position={style?.position}/>
       <div className={classes.footer}>
         <p>@{event.name}</p>
         <div className={classes.buttons}>
@@ -148,7 +158,9 @@ const EventCard: React.FC<MarkerProps> = ({id, activeId, style, markerData, onCo
             <img className={classes.icon} src={comment} alt="comment"/>
           </button>
         </div>
-      </div> </>}
+      </div> </>
+      :  <Spinner position="unset"/>
+      }
       {style?.position === 'unset' && isCommentOpen === id && event &&
         <CommentSection eventId={event._id}/>
       }

@@ -1,17 +1,10 @@
 import classes from './index.module.css'
 import { useState, useEffect } from "react";
 import commentApi from "../../api/commentApi";
-import { User } from "../../types/types";
+import { Comment, User } from "../../types/types";
 import AddCommentForm from "../Forms/AddCommentForm"
 import CommentCard from "../UI/СommentCard"
-
-interface Comment {
-  _id: string;
-  author: User;
-  event: string;
-  text: string;
-  createdAt: string
-}
+import Spinner from '../UI/Spinner';
 
 type CommentSectionProps = {
   eventId: string
@@ -20,20 +13,26 @@ type CommentSectionProps = {
 const CommentSection = ({ eventId }: CommentSectionProps) => {
   
   const [comments, setComments] = useState<Comment[]>()
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setLoading(true)
     commentApi.getCommentByEvent(eventId)
       .then((data) => setComments(data))
+      .finally(() => setLoading(false))
   }, [])
 
   return (
     <div className={classes.CommentSection}>
       <AddCommentForm eventId={eventId}/>
-        {comments && comments.map((comment) => (
-          <div key={comment._id}>
-            <CommentCard comment={comment}/>
-          </div>
-        ))}
+        {comments ? 
+          comments.map((comment) => (
+            <div key={comment.id}>
+              <CommentCard comment={comment}/>
+            </div>
+        ))
+          : <Spinner position='unset'/>
+        }
     </div>
   )
 }

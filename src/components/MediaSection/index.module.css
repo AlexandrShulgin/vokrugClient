@@ -1,21 +1,11 @@
-.AddCommentForm {
+.MediaSection {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
-.hr {
-  height: 2px;
-  border-radius: 5px;
-  background-color: #393D46;
-}
-
-.comment {
-  font-size: 15px;
-  color: #919193
-}
-
-.submit {
+.mediaButton {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,6 +20,20 @@
   color: white;
 }
 
-.submit:hover {
+.mediaButton:hover {
   outline: 3px solid #919193;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  padding: 30px;
+}
+
+.image, .video {
+  width: 100%;
+  object-fit: contain;
+  border: 3px solid #393D46;
 }

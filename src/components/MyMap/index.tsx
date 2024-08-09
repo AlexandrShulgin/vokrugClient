@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { setUser } from '../../store/slices/userSlice';
 import { setEvents } from '../../store/slices/eventSlice';
+import Spinner from '../UI/Spinner';
 
 interface Location {
   center: LngLat;
@@ -40,15 +41,17 @@ const MyMap: React.FC = () => {
   const [searchCenter, setSearchCenter] = useState<[number, number]>(locationCenter);
   const [searchRadius, setSearchRadius] = useState<number>(100);
   const [events, setEvents] = useState<MyEvent[]>()
-  
+  const [loading, setLoading] = useState<boolean>(false)
   const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.user);
 
   const isSidebarOpen = useSelector((state: RootState) => state.ref.isSidebarOpen)
 
   useEffect(() => {
+    setLoading(true)
     eventApi.getEventsInArea({ searchCenter, searchRadius })
-      .then((data) => setEvents(data));
+      .then((data) => setEvents(data))
+      .finally(() => setLoading(false))
   }, [isModalOpen, searchCenter, searchRadius]);
 
   useEffect(() => {
@@ -70,7 +73,6 @@ const MyMap: React.FC = () => {
         center: location.center,
         zoom: location.zoom,
       });
-      setSearchCenter([location.center[0], location.center[1]]);
     }
   }, []);
 
@@ -117,6 +119,7 @@ const MyMap: React.FC = () => {
 
   return (
     <>
+      {loading && <Spinner position='absolute'/>}
      <div className={classes.cover}>
         <Sidebar events={events} isOpen={isSidebarOpen}/>
         <YLoginButton currentUser={currentUser}/>
@@ -151,8 +154,8 @@ const MyMap: React.FC = () => {
           </>
           )}
           <YMapListener onMouseDown={() => { setIsContextOpen(false); setMarkerActiveId(""); }} />
-          <YMapListener onContextMenu={getMapCords} />
-          {events?.map((event) => (
+          <YMapListener onContextMenu={getMapCords} /> 
+            {events?.map((event) => (
             <MyMarker
               key={event._id}
               markerData={event}
@@ -174,7 +177,6 @@ const MyMap: React.FC = () => {
         onCreateMarker={openCreateMarkerModal}
         onSetSearchCenter={() => { setSearchCenter(clickMapCords); setIsContextOpen(false); }}
       />
-     
     </div>
     </>
   );
