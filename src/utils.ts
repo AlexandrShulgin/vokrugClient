@@ -12,8 +12,36 @@ import tornado from './img/tornado.png'
 
 export const categories = [
   {
+    type: 'Опасность',
+    src: danger
+  },
+  {
+    type: 'Взрыв',
+    src: explosion
+  },
+  {
+    type: 'Стрельба',
+    src: gunfire
+  },
+  {
     type: 'Пожар',
     src: fire
+  },
+  {
+    type: 'Затопление',
+    src: flooding
+  },
+  {
+    type: 'Ураган',
+    src: tornado
+  },
+  {
+    type: 'Бродячие животные',
+    src: stray
+  },
+  {
+    type: 'Вечеринка',
+    src: party
   },
   {
     type: 'Выступление',
@@ -24,37 +52,11 @@ export const categories = [
     src: culture
   },
   {
-    type: 'Опасность',
-    src: danger
-  },
-  {
-    type: 'Взрыв',
-    src: explosion
-  },
-  {
-    type: 'Затопление',
-    src: flooding
-  },
-  {
-    type: 'Стрельба',
-    src: gunfire
-  },
-  {
-    type: 'Вечеринка',
-    src: party
-  },
-  {
     type: 'Спортивное мероприятие',
     src: sports
   },
-  {
-    type: 'Бродячие животные',
-    src: stray
-  },
-  {
-    type: 'Ураган',
-    src: tornado
-  },
+  
+  
   
 ]
 export const dateToString = (date: Date) => {

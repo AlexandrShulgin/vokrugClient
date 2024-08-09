@@ -29,7 +29,7 @@ const MediaSection = ({ eventId, position }: MediaSectionProps) => {
       setLoading(true);
       mediaApi.getMediaByEvent(eventId)
         .then((data) => setMedia(data))
-        .catch((err) => setError('Failed to load media'))
+        .catch(() => setError('Не удалось загрузить медиафайлы. Попробуйте еще раз.'))
         .finally(() => setLoading(false));
     }
   }, [isMediaOpen, eventId]);
@@ -37,7 +37,7 @@ const MediaSection = ({ eventId, position }: MediaSectionProps) => {
   const mediaContent = useCallback(() => {
     if (position !== 'unset' || !isMediaOpen) return null;
 
-    if (loading) return  <Spinner position='unset'/>
+    if (loading) return <Spinner position='unset' />;
     if (error) return <div>{error}</div>;
     if (!media || media.length === 0) return <div>Медиафайлы не найдены</div>;
 
@@ -56,9 +56,9 @@ const MediaSection = ({ eventId, position }: MediaSectionProps) => {
     );
   }, [loading, error, media, isMediaOpen, position]);
 
-  const mediaButtonHandler = () => {
+  const mediaButtonHandler = useCallback(() => {
     if (position === 'unset') {
-      setIsMediaOpen(!isMediaOpen);
+      setIsMediaOpen(prevState => !prevState);
     } else {
       dispatch(setIsSidebarOpen(true));
       const element = document.getElementById(eventId);
@@ -68,14 +68,21 @@ const MediaSection = ({ eventId, position }: MediaSectionProps) => {
         });
       }
     }
-  }
+  }, [dispatch, eventId, position, sidebarRef]);
 
   return (
     <div className={classes.MediaSection}>
-      <div onClick={mediaButtonHandler} className={classes.mediaButton}>
+      <button 
+        onClick={mediaButtonHandler} 
+        className={classes.mediaButton}
+        aria-expanded={isMediaOpen}
+        aria-controls="media-content"
+      >
         Медиа
+      </button>
+      <div id="media-content">
+        {mediaContent()}
       </div>
-      {mediaContent()}
     </div>
   );
 }

@@ -1,8 +1,7 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Comment } from '../../../types/types';
 import { dateToString } from '../../../utils';
 import classes from './index.module.css';
-import React from 'react';
 
 type CommentCardProps = {
   comment: Comment;
@@ -11,7 +10,7 @@ type CommentCardProps = {
 const CommentCard: FC<CommentCardProps> = ({ comment }) => {
   const { author, text, media, createdAt } = comment;
   const formattedDate = dateToString(createdAt);
-  const mediaUrl = media.length > 0 ? media[0] : null;
+  const mediaUrl = media[0] || '';
 
   return (
     <div className={classes.CommentCard}>
@@ -34,7 +33,7 @@ const CommentCard: FC<CommentCardProps> = ({ comment }) => {
             {mediaUrl.match(/\.(jpeg|jpg|gif|png)$/i) ? (
               <img src={mediaUrl} alt="media" className={classes.image} />
             ) : (
-              <video src={mediaUrl} controls autoPlay={false} className={classes.video} />
+              <video src={mediaUrl} controls className={classes.video} />
             )}
           </div>
         )}

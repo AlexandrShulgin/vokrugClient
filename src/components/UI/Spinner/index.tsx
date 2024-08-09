@@ -1,4 +1,3 @@
-import { CSSProperties } from 'react';
 import classes from './index.module.css'
 
 type SpinnerProps = {

@@ -1,40 +1,53 @@
-import classes from './index.module.css'
+import classes from './index.module.css';
 import { useState, useEffect } from "react";
 import commentApi from "../../api/commentApi";
-import { Comment, User } from "../../types/types";
-import AddCommentForm from "../Forms/AddCommentForm"
-import CommentCard from "../UI/СommentCard"
+import { Comment } from "../../types/types";
+import AddCommentForm from "../Forms/AddCommentForm";
+import CommentCard from "../UI/СommentCard";
 import Spinner from '../UI/Spinner';
 
 type CommentSectionProps = {
-  eventId: string
+  eventId: string;
 }
 
 const CommentSection = ({ eventId }: CommentSectionProps) => {
   
-  const [comments, setComments] = useState<Comment[]>()
+  const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     commentApi.getCommentByEvent(eventId)
-      .then((data) => setComments(data))
-      .finally(() => setLoading(false))
-  }, [])
+      .then((data) => {
+        if (data?.success) {
+          setComments(data.comments);
+        } else {
+          setError("Не удалось загрузить комментарии.");
+        }
+      })
+      .catch(() => {
+        setError("Произошла ошибка при загрузке комментариев.");
+      })
+      .finally(() => setLoading(false));
+  }, [eventId]);
 
   return (
     <div className={classes.CommentSection}>
-      <AddCommentForm eventId={eventId}/>
-        {comments ? 
-          comments.map((comment) => (
-            <div key={comment.id}>
-              <CommentCard comment={comment}/>
-            </div>
+      <AddCommentForm eventId={eventId} />
+      {loading ? (
+        <Spinner position='unset' />
+      ) : error ? (
+        <div className={classes.ErrorMessage}>{error}</div>
+      ) : (
+        comments.map((comment) => (
+          <div key={comment.id}>
+            <CommentCard comment={comment} />
+          </div>
         ))
-          : <Spinner position='unset'/>
-        }
+      )}
     </div>
-  )
+  );
 }
 
-export default CommentSection
+export default CommentSection;

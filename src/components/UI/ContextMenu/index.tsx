@@ -18,25 +18,26 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   onCreateMarker,
   onSetSearchCenter,
 }) => {
-  const [width, setWidth] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
+  const [menuDimensions, setMenuDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (ref.current) {
-      setWidth(ref.current.offsetWidth);
-      setHeight(ref.current.offsetHeight);
+      setMenuDimensions({
+        width: ref.current.offsetWidth,
+        height: ref.current.offsetHeight,
+      });
     }
   }, [ref.current]);
 
   if (!isContextOpen) return null;
 
-  const adjustedX = x - width > 0 ? x - width : x;
-  const adjustedY = y - height > 0 ? y - height : y;
+  const adjustedX = Math.min(x, window.innerWidth - menuDimensions.width);
+  const adjustedY = Math.min(y, window.innerHeight - menuDimensions.height);
 
   return (
     <div
-      onContextMenu={(e) => e.stopPropagation()}
+      onContextMenu={(e) => e.preventDefault()}
       ref={ref}
       className={[classes.ContextMenu, classes.fade].join(' ')}
       style={{ top: `${adjustedY}px`, left: `${adjustedX}px` }}

@@ -23,6 +23,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
   const [type, setType] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [media, setMedia] = useState<File[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     axios
@@ -33,21 +34,33 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
           name: geoObject.name,
           description: geoObject.description,
         });
+      })
+      .catch(() => {
+        setError("Не удалось получить данные о местоположении.");
       });
   }, [cords]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    eventApi.createEvent({
-      type,
-      description,
-      coordinates: cords,
-      address,
-      userId: id ? id : '0',
-      name: name ? name : "anonym",
-      media
-    })
-    .finally(() => onClose());
+    if (!type) {
+      setError("Пожалуйста, выберите категорию события.");
+      return;
+    }
+
+    try {
+      await eventApi.createEvent({
+        type,
+        description,
+        coordinates: cords,
+        address,
+        userId: id || '0',
+        name: name || 'anonym',
+        media,
+      });
+      onClose();
+    } catch (error) {
+      setError("Ошибка при создании события. Попробуйте еще раз.");
+    }
   };
 
   const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +73,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
     <form onSubmit={handleSubmit} encType="multipart/form-data">
       <div className={classes.CreateEventForm}>
         <h1>Добавить новое событие</h1>
+        {error && <p className={classes.error}>{error}</p>}
         <div className={classes.address}>
           <p className={classes.street}>{address.name}</p>
           <p className={classes.globalAddress}>{address.description}</p>
@@ -72,7 +86,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
                 onClick={() => setType(category.type.toString())}
                 style={type === category.type.toString() ? { outline: '3px solid white' } : {}}
               >
-                <img src={category.src} alt={category.type} className={classes.categoryImg}/>
+                <img src={category.src} alt={category.type} className={classes.categoryImg} />
               </div>
               <p className={classes.categoryTitle}>{category.type}</p>
             </div>
