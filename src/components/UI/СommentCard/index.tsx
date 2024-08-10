@@ -1,48 +1,43 @@
-import React, { FC } from 'react';
-import { Comment } from '../../../types/types';
-import { dateToString } from '../../../utils';
-import classes from './index.module.css';
+import { User } from '../../../types/types'
+import { dateToString } from '../../../utils'
+import classes from './index.module.css'
 
-type CommentCardProps = {
-  comment: Comment;
-};
-
-const CommentCard: FC<CommentCardProps> = ({ comment }) => {
-  const { author, text, media, createdAt } = comment;
-  const formattedDate = dateToString(createdAt);
-  const mediaUrl = media[0] || '';
-
+const CommentCard = ({comment}: any) => {
   return (
     <div className={classes.CommentCard}>
       <div className={classes.line}></div>
       <div className={classes.content}>
         <div className={classes.header}>
-          <img
-            className={classes.img}
-            src={`https://avatars.yandex.net/get-yapic/${author.avatar_id}/islands-34`}
-            alt="avatar"
-          />
+          <img className={classes.img} src={`https://avatars.yandex.net/get-yapic/${comment.author.avatar_id}/islands-34`} alt='avatar'/>
           <div className={classes.userInfo}>
-            <div className={classes.userName}>{author.display_name}</div>
-            <div className={classes.userMail}>{author.email}</div>
+            <div className={classes.userName}>
+              {comment.author.display_name}
+            </div>
+            <div className={classes.userMail}>
+              {comment.author.email}
+            </div>
           </div>
         </div>
-        <div className={classes.text}>{text}</div>
-        {mediaUrl && (
+        <div className={classes.text}>
+          {comment.text}
+        </div>
+        {comment.media.length !== 0 &&
           <div className={classes.media}>
-            {mediaUrl.match(/\.(jpeg|jpg|gif|png)$/i) ? (
-              <img src={mediaUrl} alt="media" className={classes.image} />
-            ) : (
-              <video src={mediaUrl} controls className={classes.video} />
-            )}
+            {comment.media[0].match(/\.(jpeg|jpg|gif|png)$/i) ? (
+                <img src={comment.media[0]} alt={'media'} className={classes.image}/>
+              ) : (
+                <video src={comment.media[0]} controls autoPlay={false} className={classes.video}/>
+              )}
           </div>
-        )}
+        }
         <div className={classes.footer}>
-          <div className={classes.date}>{`${formattedDate[0]}/${formattedDate[1]}`}</div>
+          <div className={classes.date}>
+            {`${dateToString(comment.createdAt)[0]}/${dateToString(comment.createdAt)[1]}`}
+          </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default React.memo(CommentCard);
+export default CommentCard
