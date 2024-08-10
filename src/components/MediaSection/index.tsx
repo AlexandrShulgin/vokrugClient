@@ -47,9 +47,9 @@ const MediaSection = ({ eventId, position }: MediaSectionProps) => {
       <div className={classes.content}>
         {urls.map((url) =>
           url.match(/\.(jpeg|jpg|gif|png)$/i) ? (
-            <img src={url} alt="media" className={classes.image} key={url} />
+            <img src={`http://5.35.44.198:5000/${url}`} alt="media" className={classes.image} key={url} />
           ) : (
-            <video src={url} controls autoPlay={false} className={classes.video} key={url} />
+            <video src={`http://5.35.44.198:5000/${url}`} controls autoPlay={false} className={classes.video} key={url} />
           )
         )}
       </div>
