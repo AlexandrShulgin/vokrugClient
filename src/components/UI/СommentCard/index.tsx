@@ -21,7 +21,7 @@ const CommentCard = ({comment}: any) => {
         <div className={classes.text}>
           {comment.text}
         </div>
-        {comment.media.length !== 0 &&
+        {comment.media.length !== 0 && comment.media[0] !== "" &&
           <div className={classes.media}>
             {comment.media[0].match(/\.(jpeg|jpg|gif|png)$/i) ? (
                 <img src={comment.media[0]} alt={'media'} className={classes.image}/>

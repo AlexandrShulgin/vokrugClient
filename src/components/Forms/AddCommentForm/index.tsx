@@ -7,9 +7,10 @@ import { RootState } from '../../../store/store';
 import clip from '../../../img/clip.png'
 interface CommentProps {
   eventId: string;
+  onRerender: () => void;
 }
 
-const AddCommentForm = ({ eventId }: CommentProps) => {
+const AddCommentForm = ({ eventId, onRerender }: CommentProps) => {
   const [comment, setComment] = useState<string>('');
   const [media, setMedia] = useState<File | null>(null);
 
@@ -20,9 +21,11 @@ const AddCommentForm = ({ eventId }: CommentProps) => {
     if (comment) {
       try {
         if (media) {
-          await commentApi.createComment({authorId: currentUser._id, eventId, text: comment, media});
+          await commentApi.createComment({authorId: currentUser._id, eventId, text: comment, media})
+            .finally(() => onRerender());
         } else {
-          await commentApi.createComment({authorId: currentUser._id, eventId, text: comment});
+          await commentApi.createComment({authorId: currentUser._id, eventId, text: comment})
+          .finally(() => onRerender());
         }
         setComment('');
         setMedia(null);
