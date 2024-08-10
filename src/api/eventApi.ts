@@ -36,7 +36,7 @@ const createEvent = async ({ type, description, coordinates, address, userId, na
       formData.append('media', file);
     });
   try {
-    const response = await axios.post('/api/events/create', formData, {
+    const response = await axios.post('http://5.35.44.198:5000/api/events/create', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -50,7 +50,7 @@ const createEvent = async ({ type, description, coordinates, address, userId, na
 
 const getAllEvents = async (): Promise<any[]> => {
   try {
-    const response = await axios.get('/api/events/getAll');
+    const response = await axios.get('http://5.35.44.198:5000/api/events/getAll');
     return response.data;
   } catch (error) {
     console.error('Error:', error);
@@ -60,7 +60,7 @@ const getAllEvents = async (): Promise<any[]> => {
 
 const getEventsInArea = async ({ searchCenter, searchRadius }: SearchAreaParams): Promise<any[]> => {
   try {
-    const response = await axios.get('/api/events/getInArea', { params: { searchCenter, searchRadius } });
+    const response = await axios.get('http://5.35.44.198:5000/api/events/getInArea', { params: { searchCenter, searchRadius } });
     return response.data;
   } catch (error) {
     console.log('Error:', error);
@@ -70,7 +70,7 @@ const getEventsInArea = async ({ searchCenter, searchRadius }: SearchAreaParams)
 
 const getEventById = async (id: string) => {
   try {
-    const response = await axios.get('/api/events/getById', { params: {id}})
+    const response = await axios.get('http://5.35.44.198:5000/api/events/getById', { params: {id}})
     return response.data
   } catch (error) {
     console.log(error)
@@ -79,7 +79,7 @@ const getEventById = async (id: string) => {
 
 const plusEvent = async ({ eventId, userId }: plusEvent) => {
   try {
-    const response = await axios.post('/api/events/plus', {
+    const response = await axios.post('http://5.35.44.198:5000/api/events/plus', {
       eventId,
       userId,
     })
@@ -91,7 +91,7 @@ const plusEvent = async ({ eventId, userId }: plusEvent) => {
 
 const reportEvent = async ({ eventId, userId }: plusEvent) => {
   try {
-    const response = await axios.post('/api/events/report', {
+    const response = await axios.post('http://5.35.44.198:5000/api/events/report', {
       eventId,
       userId,
     })

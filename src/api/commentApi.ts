@@ -17,7 +17,7 @@ const createComment = async ({ authorId, eventId, text, media }: CommentData) =>
       formData.append('media', media);
     }    
   try {
-    const response = await axios.post('/api/comments/create', formData, {
+    const response = await axios.post('http://5.35.44.198:5000/api/comments/create', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -30,7 +30,7 @@ const createComment = async ({ authorId, eventId, text, media }: CommentData) =>
 
 const getCommentByEvent = async (eventId: string) => {
   try {
-    const response = await axios.get('/api/comments/getByEvent', { params: {eventId}})
+    const response = await axios.get('http://5.35.44.198:5000/api/comments/getByEvent', { params: {eventId}})
     return response.data
   } catch (error) {
     console.log(error)
