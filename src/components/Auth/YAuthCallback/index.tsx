@@ -9,7 +9,7 @@ const YAuthCallback: React.FC = () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     if (code) {
-      axios.post('http://5.35.44.198:5000/api/users', { code })
+      axios.post('http://localhost:5000/api/users', { code })
         .then(response => {
           // Сохраните токен и перенаправьте пользователя
           localStorage.setItem('token', response.data.token);

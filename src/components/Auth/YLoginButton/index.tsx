@@ -15,7 +15,7 @@ interface User {
 const YLoginButton: React.FC<YLoginButtonProps> = ({ currentUser }) => {
   
   const clientId = '85d13ff8593a461a9d0d6328dc713073';
-  const redirectUri = 'http://5.35.44.198:3000/auth/callback';
+  const redirectUri = 'http://localhost:3000/auth/callback';
 
   const login = () => {
     const yandexAuthUrl = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
