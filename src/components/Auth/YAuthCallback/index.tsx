@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { HOST } from "../../../utils";
 
 const YAuthCallback: React.FC = () => {
   const navigate = useNavigate()
@@ -9,7 +10,7 @@ const YAuthCallback: React.FC = () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     if (code) {
-      axios.post('http://v101242.hosted-by-vdsina.com:5000/api/users', { code })
+      axios.post(`${HOST}/api/users`, { code })
         .then(response => {
           // Сохраните токен и перенаправьте пользователя
           localStorage.setItem('token', response.data.token);

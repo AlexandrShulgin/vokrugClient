@@ -26,7 +26,7 @@ const YLoginButton: React.FC<YLoginButtonProps> = ({ currentUser }) => {
     <>
       {currentUser?._id ? 
       <div className={classes.YLoginButton}>
-        <img src={`https://avatars.yandex.net/get-yapic/${currentUser.avatar}/islands-middle`} alt="user"/>
+        <img src={`https://avatars.yandex.net/get-yapic/${currentUser.avatar}/islands-small`} alt="user"/>
         <div className={classes.userInfo}>
           <div>@{currentUser.name}</div>
           <div className={classes.email}>{currentUser.email}</div>

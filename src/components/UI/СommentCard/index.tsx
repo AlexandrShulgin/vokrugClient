@@ -1,8 +1,17 @@
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/store';
 import { User } from '../../../types/types'
-import { dateToString } from '../../../utils'
+import { dateToString, HOST } from '../../../utils'
 import classes from './index.module.css'
-
+import trashcan from '../../../img/trashcangray.png'
 const CommentCard = ({comment}: any) => {
+  
+  const handleDelete = () => {
+
+  }
+
+  const currentUser = useSelector((state: RootState) => state.user);
+  console.log(comment)
   return (
     <div className={classes.CommentCard}>
       <div className={classes.line}></div>
@@ -24,9 +33,9 @@ const CommentCard = ({comment}: any) => {
         {comment.media.length !== 0 && comment.media[0] !== "" &&
           <div className={classes.media}>
             {comment.media[0].match(/\.(jpeg|jpg|gif|png)$/i) ? (
-                <img src={`http://v101242.hosted-by-vdsina.com:5000/${comment.media[0]}`} alt={'media'} className={classes.image}/>
+                <img src={`${HOST}/${comment.media[0]}`} alt={'media'} className={classes.image}/>
               ) : (
-                <video src={`http://v101242.hosted-by-vdsina.com:5000/${comment.media[0]}`} controls autoPlay={false} className={classes.video}/>
+                <video src={`${HOST}/${comment.media[0]}`} controls autoPlay={false} className={classes.video}/>
               )}
           </div>
         }
@@ -34,6 +43,9 @@ const CommentCard = ({comment}: any) => {
           <div className={classes.date}>
             {`${dateToString(comment.createdAt)[0]}/${dateToString(comment.createdAt)[1]}`}
           </div>
+          <button className={classes.delete} onClick={handleDelete}>
+            <img src={trashcan} alt='delete'/>
+          </button>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './slices/userSlice'
 import eventsReducer from './slices/eventSlice';
 import refReducer from './slices/refSlice'
+import rerenderReducer from './slices/rerenderSlice'
 
 const store = configureStore({
 
@@ -17,6 +18,7 @@ const store = configureStore({
     user: userReducer,
     events: eventsReducer,
     ref: refReducer,
+    rerender: rerenderReducer,
   },
 });
 

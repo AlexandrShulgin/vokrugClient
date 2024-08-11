@@ -1,4 +1,5 @@
 import axios from "axios";
+import { HOST } from "../utils";
 
 interface CommentData {
   authorId: string;
@@ -17,7 +18,7 @@ const createComment = async ({ authorId, eventId, text, media }: CommentData) =>
       formData.append('media', media);
     }    
   try {
-    const response = await axios.post('http://v101242.hosted-by-vdsina.com:5000/api/comments/create', formData, {
+    const response = await axios.post(`${HOST}/api/comments/create`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -30,7 +31,7 @@ const createComment = async ({ authorId, eventId, text, media }: CommentData) =>
 
 const getCommentByEvent = async (eventId: string) => {
   try {
-    const response = await axios.get('http://v101242.hosted-by-vdsina.com:5000/api/comments/getByEvent', { params: {eventId}})
+    const response = await axios.get(`${HOST}/api/comments/getByEvent`, { params: {eventId}})
     return response.data
   } catch (error) {
     console.log(error)

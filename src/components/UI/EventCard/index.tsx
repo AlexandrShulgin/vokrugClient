@@ -15,6 +15,9 @@ import { dateToString } from "../../../utils";
 import Spinner from "../Spinner";
 import { setIsCommentOpen } from "../../../store/slices/refSlice";
 import { categories } from "../../../utils";
+import trashcan from "../../../img/trashcan.png"
+import edit from "../../../img/edit.png"
+import { setRerender } from "../../../store/slices/rerenderSlice";
 
 type MarkerProps = {
   markerData?: MyEvent;
@@ -89,10 +92,34 @@ const EventCard: React.FC<MarkerProps> = ({ id, activeId, style, markerData, onC
     }
   };
 
+  const handleDelete = () => {
+    if (event && currentUser._id !== '0') {
+      if (event.userId === currentUser._id) {
+        eventApi.deleteEvent({eventId: event._id})
+          .finally(() => dispatch(setRerender()))
+      }
+    }
+  }
+
   return (
-    <div id={id} className={classes.EventCard} style={style} onMouseDown={(e) => e.stopPropagation()}>
+    <div 
+      id={id} 
+      className={classes.EventCard} 
+      style={style} 
+      onMouseDown={(e) => e.stopPropagation()}  
+    >
       {event ? (
         <>
+          {currentUser._id !== '0' && event.userId === currentUser._id &&
+            <div className={classes.currentUser}>
+              <div>Это ваше событие</div>
+              <div className={classes.buttonSection}>
+                <button onClick={handleDelete}>
+                  <img src={trashcan} alt="delete"/>
+                </button>
+              </div>
+            </div>
+          }
           <div className={classes.header}>
             <div className={classes.type}>
               <img
@@ -111,7 +138,12 @@ const EventCard: React.FC<MarkerProps> = ({ id, activeId, style, markerData, onC
             <div>{event.address.name.charAt(0).toUpperCase() + event.address.name.slice(1)}</div>
             <div>{event.address.description}</div>
           </div>
-          <div className={classes.description}>{event.description}</div>
+          {event.description ?
+            <div className={classes.description}>{event.description}</div>
+            :
+            <div className={classes.hr}></div>
+          } 
+
           <MediaSection eventId={event._id} position={style?.position} />
           <div className={classes.footer}>
             <p>@{event.name}</p>

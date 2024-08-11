@@ -70,3 +70,5 @@ export const dateToString = (date: Date) => {
   const hh_mimi = `${hh}:${mimi}`
   return [dd_mm_yyyy, hh_mimi]
 }
+
+export const HOST = 'http://localhost:5000'

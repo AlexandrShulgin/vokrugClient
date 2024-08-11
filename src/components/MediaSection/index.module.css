@@ -18,6 +18,7 @@
   font-size: 12px;
   outline: 2px solid #919193;
   color: white;
+  cursor: pointer;
 }
 
 .mediaButton:hover {

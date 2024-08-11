@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, ReactElement } from 'react';
+import React, { useEffect, useState, useCallback, ReactElement, useRef } from 'react';
 import classes from './index.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
@@ -40,7 +40,9 @@ const MyMap: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.user);
+  const rerender = useSelector((state: RootState) => state.rerender);
   const isSidebarOpen = useSelector((state: RootState) => state.ref.isSidebarOpen);
+  const longPressTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -51,7 +53,7 @@ const MyMap: React.FC = () => {
         alert("Ошибка загрузки событий")
       })
       .finally(() => setLoading(false));
-  }, [isModalOpen, searchCenter, searchRadius]);
+  }, [isModalOpen, searchCenter, searchRadius, rerender]);
 
   useEffect(() => {
     if (localStorage.user) {
@@ -111,6 +113,27 @@ const MyMap: React.FC = () => {
     return area.geometry as YMaps.PolygonGeometry;
   }, [searchCenter, searchRadius]);
 
+  //ios contextMenu
+
+  const isIOS = () => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+  };
+
+  const handleTouchStart = useCallback((event: React.TouchEvent<HTMLDivElement>) => {
+    longPressTimeout.current = setTimeout(() => {
+      const touch = event.touches[0];
+      setContextPixelCords({ x: touch.pageX, y: touch.pageY });
+      setIsContextOpen(true);
+    }, 500);
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (longPressTimeout.current) {
+      clearTimeout(longPressTimeout.current);
+    }
+  }, []);
+
+
   return (
     <>
       {loading && <Spinner position='absolute'/>}
@@ -125,7 +148,12 @@ const MyMap: React.FC = () => {
           onChange={setSearchRadius}
         />
       </div>
-      <div className={classes.Map} onContextMenu={contextMenuHandler}>
+      <div 
+        className={classes.Map}
+        onContextMenu={!isIOS() ? contextMenuHandler : undefined}
+        onTouchStart={isIOS() ? handleTouchStart : undefined}
+        onTouchEnd={isIOS() ? handleTouchEnd : undefined}
+      >
         <YMapComponentsProvider apiKey={apiKey} lang="ru_RU">
           <YMap
             key="map"

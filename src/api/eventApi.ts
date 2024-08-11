@@ -1,4 +1,5 @@
 import axios from "axios";
+import { HOST } from "../utils";
 
 interface EventData {
   type: string;
@@ -23,6 +24,10 @@ interface plusEvent {
   userId: string,
 }
 
+interface deleteEvent {
+  eventId: string;
+}
+
 const createEvent = async ({ type, description, coordinates, address, userId, name, media }: EventData) => {
   
   const formData = new FormData();
@@ -36,7 +41,7 @@ const createEvent = async ({ type, description, coordinates, address, userId, na
       formData.append('media', file);
     });
   try {
-    const response = await axios.post('http://v101242.hosted-by-vdsina.com:5000/api/events/create', formData, {
+    const response = await axios.post(`${HOST}/api/events/create`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -50,7 +55,7 @@ const createEvent = async ({ type, description, coordinates, address, userId, na
 
 const getAllEvents = async (): Promise<any[]> => {
   try {
-    const response = await axios.get('http://v101242.hosted-by-vdsina.com:5000/api/events/getAll');
+    const response = await axios.get(`${HOST}/api/events/getAll`);
     return response.data;
   } catch (error) {
     console.error('Error:', error);
@@ -60,7 +65,7 @@ const getAllEvents = async (): Promise<any[]> => {
 
 const getEventsInArea = async ({ searchCenter, searchRadius }: SearchAreaParams): Promise<any[]> => {
   try {
-    const response = await axios.get('http://v101242.hosted-by-vdsina.com:5000/api/events/getInArea', { params: { searchCenter, searchRadius } });
+    const response = await axios.get(`${HOST}/api/events/getInArea`, { params: { searchCenter, searchRadius } });
     return response.data;
   } catch (error) {
     console.log('Error:', error);
@@ -70,7 +75,7 @@ const getEventsInArea = async ({ searchCenter, searchRadius }: SearchAreaParams)
 
 const getEventById = async (id: string) => {
   try {
-    const response = await axios.get('http://v101242.hosted-by-vdsina.com:5000/api/events/getById', { params: {id}})
+    const response = await axios.get(`${HOST}/api/events/getById`, { params: {id}})
     return response.data
   } catch (error) {
     console.log(error)
@@ -79,7 +84,7 @@ const getEventById = async (id: string) => {
 
 const plusEvent = async ({ eventId, userId }: plusEvent) => {
   try {
-    const response = await axios.post('http://v101242.hosted-by-vdsina.com:5000/api/events/plus', {
+    const response = await axios.post(`${HOST}/api/events/plus`, {
       eventId,
       userId,
     })
@@ -91,7 +96,7 @@ const plusEvent = async ({ eventId, userId }: plusEvent) => {
 
 const reportEvent = async ({ eventId, userId }: plusEvent) => {
   try {
-    const response = await axios.post('http://v101242.hosted-by-vdsina.com:5000/api/events/report', {
+    const response = await axios.post(`${HOST}/api/events/report`, {
       eventId,
       userId,
     })
@@ -101,4 +106,15 @@ const reportEvent = async ({ eventId, userId }: plusEvent) => {
   }
 }
 
-export default { createEvent, getAllEvents, getEventsInArea, getEventById, plusEvent, reportEvent };
+const deleteEvent = async ({ eventId }: deleteEvent) => {
+  try {
+    const response = await axios.post(`${HOST}/api/events/delete`, {
+      eventId,
+    })
+    return (response.data)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export default { createEvent, getAllEvents, getEventsInArea, getEventById, plusEvent, reportEvent, deleteEvent };

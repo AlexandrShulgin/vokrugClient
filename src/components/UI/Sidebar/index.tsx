@@ -29,9 +29,6 @@ const Sidebar: React.FC<SidebarProps> = ({ events, isOpen }) => {
       </button>
       
       <div ref={sidebarRef} className={classes.events}>
-        <div className={classes.search}>
-          <input type='text' placeholder='Search events...' />
-        </div>
         {events?.map((event) => (
           <EventCard 
             id={event._id} 

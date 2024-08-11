@@ -15,23 +15,27 @@ const AddCommentForm = ({ eventId, onRerender }: CommentProps) => {
   const [media, setMedia] = useState<File | null>(null);
 
   const currentUser = useSelector((state: RootState) => state.user);
-
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (comment) {
-      try {
-        if (media) {
-          await commentApi.createComment({authorId: currentUser._id, eventId, text: comment, media})
+    if (currentUser._id) {
+      if (comment) {
+        try {
+          if (media) {
+            await commentApi.createComment({authorId: currentUser._id, eventId, text: comment, media})
+              .finally(() => onRerender());
+          } else {
+            await commentApi.createComment({authorId: currentUser._id, eventId, text: comment})
             .finally(() => onRerender());
-        } else {
-          await commentApi.createComment({authorId: currentUser._id, eventId, text: comment})
-          .finally(() => onRerender());
+          }
+          setComment('');
+          setMedia(null);
+        } catch (error) {
+          console.error("Ошибка при отправке комментария:", error);
         }
-        setComment('');
-        setMedia(null);
-      } catch (error) {
-        console.error("Ошибка при отправке комментария:", error);
       }
+    } else {
+      alert("Оставлять комментарии могут только авторизованные пользователи")
     }
   }
 

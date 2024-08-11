@@ -11,6 +11,34 @@
   background-color: #222327;
 }
 
+.currentUser {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #111111;
+}
+
+.buttonSection {
+  display: flex;
+  gap: 10px;
+}
+
+.buttonSection button {
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonSection img {
+  width: 20px;
+  height: 20px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -76,6 +104,7 @@
   color: #919193;
   background: none;
   border: none;
+  cursor: pointer;
 }
 
 .icon {
@@ -93,4 +122,10 @@
   margin-top: 10px;
   font-size: 15px;
   color: #919193;
+}
+
+.hr {
+  height: 3px;
+  border-radius: 2px;
+  background-color: #393D46;
 }

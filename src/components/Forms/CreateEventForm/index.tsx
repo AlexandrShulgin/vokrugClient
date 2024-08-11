@@ -55,7 +55,7 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
         coordinates: cords,
         address,
         userId: id || '0',
-        name: name || 'anonym',
+        name: name || 'Аноним',
         media,
       });
       onClose();
