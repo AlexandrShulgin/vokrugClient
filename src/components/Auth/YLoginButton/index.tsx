@@ -24,7 +24,7 @@ const YLoginButton: React.FC<YLoginButtonProps> = ({ currentUser }) => {
 
   return (
     <>
-      {currentUser?._id ? 
+      {currentUser && currentUser._id !== '0' ? 
       <div className={classes.YLoginButton}>
         <img src={`https://avatars.yandex.net/get-yapic/${currentUser.avatar}/islands-small`} alt="user"/>
         <div className={classes.userInfo}>

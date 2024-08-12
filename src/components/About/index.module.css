@@ -1,0 +1,15 @@
+.About {
+  padding: 20px;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.About p {
+  margin: 15px 0;
+  
+}
+
+.About img {
+  width: 20px;
+  height: 20px;
+}

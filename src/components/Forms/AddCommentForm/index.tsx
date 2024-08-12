@@ -28,8 +28,6 @@ const AddCommentForm = ({ eventId, onRerender }: CommentProps) => {
             await commentApi.createComment({authorId: currentUser._id, eventId, text: comment})
             .finally(() => onRerender());
           }
-          setComment('');
-          setMedia(null);
         } catch (error) {
           console.error("Ошибка при отправке комментария:", error);
         }
@@ -37,6 +35,8 @@ const AddCommentForm = ({ eventId, onRerender }: CommentProps) => {
     } else {
       alert("Оставлять комментарии могут только авторизованные пользователи")
     }
+    setComment('');
+    setMedia(null);
   }
 
   const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {

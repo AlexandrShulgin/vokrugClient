@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../types/types';
 
 const initialState: User = {
-  _id: '',
+  _id: '0',
   email: '', 
-  name: '',
+  name: 'Аноним',
   avatar: '',
 };
 

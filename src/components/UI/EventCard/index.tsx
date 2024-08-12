@@ -32,8 +32,8 @@ const EventCard: React.FC<MarkerProps> = ({ id, activeId, style, markerData, onC
   const currentUser = useSelector((state: RootState) => state.user);
   const isCommentOpen = useSelector((state: RootState) => state.ref.isCommentOpen);
   const [event, setEvent] = useState<MyEvent>();
-  const [pluses, setPluses] = useState<number>();
-  const [reports, setReports] = useState<number>();
+  const [pluses, setPluses] = useState<number>(0);
+  const [reports, setReports] = useState<number>(0);
   const [isPlusClicked, setIsPlusClicked] = useState<boolean>(false);
   const [isReportClicked, setIsReportClicked] = useState<boolean>(false);
 
@@ -56,28 +56,41 @@ const EventCard: React.FC<MarkerProps> = ({ id, activeId, style, markerData, onC
   }, [event, currentUser._id]);
 
   const plusHandler = () => {
-    if (isReportClicked) {
-      reportHandler();
-    }
-    if (currentUser && event) {
-      eventApi.plusEvent({ eventId: event._id, userId: currentUser._id });
-    }
-    if (pluses !== undefined) {
-      setPluses(isPlusClicked ? pluses - 1 : pluses + 1);
-      setIsPlusClicked(!isPlusClicked);
+    if (event && (currentUser._id !== '0')) {
+      if (isReportClicked) {
+        reportHandler();
+      }
+      if (currentUser && event) {
+        eventApi.plusEvent({ eventId: event._id, userId: currentUser._id });
+      }
+      if (pluses !== undefined) {
+        setPluses(isPlusClicked ? pluses - 1 : pluses + 1);
+        setIsPlusClicked(!isPlusClicked);
+      }
+    } else {
+      alert("Только авторизованные пользователи могут оценить событие");
     }
   };
 
   const reportHandler = () => {
-    if (isPlusClicked) {
-      plusHandler();
-    }
-    if (currentUser && event) {
-      eventApi.reportEvent({ eventId: event._id, userId: currentUser._id });
-    }
-    if (reports !== undefined) {
-      setReports(isReportClicked ? reports - 1 : reports + 1);
-      setIsReportClicked(!isReportClicked);
+    if (event && (currentUser._id !== '0')) {
+      if (reports < 3) {
+        if (isPlusClicked) {
+          plusHandler();
+        }
+        if (currentUser && event) {
+          eventApi.reportEvent({ eventId: event._id, userId: currentUser._id });
+        }
+        if (reports !== undefined) {
+          setReports(isReportClicked ? reports - 1 : reports + 1);
+          setIsReportClicked(!isReportClicked);
+        }
+      } else {
+        eventApi.deleteEvent({eventId: event._id})
+          .finally(() => dispatch(setRerender()))
+      }
+    } else {
+      alert("Только авторизованные пользователи могут оценить событие");
     }
   };
 

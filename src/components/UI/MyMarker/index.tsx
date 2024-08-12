@@ -33,7 +33,7 @@ const MyMarker: React.FC<MarkerProps> = ({ markerData, onClick, activeId }) => {
   };
 
   return (
-    <YMapMarker coordinates={cords} onClick={onClick} zIndex={isActive ? 999 : 0}>
+    <YMapMarker coordinates={cords} onClick={onClick} zIndex={isActive ? 999 : markerData.pluses.length}>
       <div className={classes.point}></div>
       <div className={classes.MyMarker}>
         {isActive ? (

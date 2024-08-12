@@ -19,6 +19,8 @@ import { location as LOCATION, apiKey, locationCenter } from "./helpers";
 import eventApi from "../../api/eventApi";
 import YLoginButton from '../Auth/YLoginButton';
 import { setUser } from '../../store/slices/userSlice';
+import About from '../About';
+import info from '../../img/info.png'
 
 interface Location {
   center: LngLat;
@@ -147,6 +149,12 @@ const MyMap: React.FC = () => {
           value={searchRadius}
           onChange={setSearchRadius}
         />
+        <button 
+          className={classes.about}
+          onClick={() => {setModalContent(<About/>); setIsModalOpen(true)}}
+          >
+          <img src={info} alt='info'/>
+        </button>
       </div>
       <div 
         className={classes.Map}

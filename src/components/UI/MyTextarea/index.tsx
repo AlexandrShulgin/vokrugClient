@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent, CSSProperties } from 'react';
-import classes from './index.module.css'
+import React, { ChangeEvent, CSSProperties } from 'react';
+import classes from './index.module.css';
 
 interface MyTextareaProps {
   value?: string;
@@ -18,12 +18,9 @@ const MyTextarea: React.FC<MyTextareaProps> = ({
   maxLength = 250,
   style
 }) => {
-  const [text, setText] = useState(value);
-
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = event.target.value;
     if (maxLength && newValue.length <= maxLength) {
-      setText(newValue);
       if (onChange) {
         onChange(newValue);
       }
@@ -31,8 +28,9 @@ const MyTextarea: React.FC<MyTextareaProps> = ({
   };
 
   return (
-    <textarea className={classes.MyTextarea}
-      value={text}
+    <textarea
+      className={classes.MyTextarea}
+      value={value}
       placeholder={placeholder}
       onChange={handleChange}
       maxLength={maxLength}
