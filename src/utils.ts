@@ -71,4 +71,4 @@ export const dateToString = (date: Date) => {
   return [dd_mm_yyyy, hh_mimi]
 }
 
-export const HOST = 'v101242.hosted-by-vdsina.com:5000'
+export const HOST = 'http://v101242.hosted-by-vdsina.com:5000'
