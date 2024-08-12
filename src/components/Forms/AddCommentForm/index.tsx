@@ -18,7 +18,7 @@ const AddCommentForm = ({ eventId, onRerender }: CommentProps) => {
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (currentUser._id) {
+    if (currentUser._id !== '0') {
       if (comment) {
         try {
           if (media) {
