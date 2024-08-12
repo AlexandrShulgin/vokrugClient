@@ -184,7 +184,8 @@ const MyMap: React.FC = () => {
               </>
             )}
             <YMapListener onMouseDown={() => { setIsContextOpen(false); setMarkerActiveId(""); }} />
-            <YMapListener onContextMenu={getMapCords} /> 
+            <YMapListener onContextMenu={getMapCords} />
+            <YMapListener onTouchStart={getMapCords} />
             {events?.map((event) => (
               <MyMarker
                 key={event._id}
