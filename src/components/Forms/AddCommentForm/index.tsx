@@ -64,7 +64,7 @@ const AddCommentForm = ({ eventId, onRerender }: CommentProps) => {
             <div>{media?.name}</div>
           </div>
         </div>
-        <input id="file-upload" type="file" accept="image/*,video/*" onChange={handleMediaChange} />
+        <input id="file-upload" type="file" accept="image/*" onChange={handleMediaChange} />
         
         <button className={classes.submit} type='submit'>Отправить</button>
       </div>

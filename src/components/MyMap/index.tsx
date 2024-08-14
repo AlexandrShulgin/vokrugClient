@@ -126,7 +126,7 @@ const MyMap: React.FC = () => {
       const touch = event.touches[0];
       setContextPixelCords({ x: touch.pageX, y: touch.pageY });
       setIsContextOpen(true);
-    }, 500);
+    }, 1000);
   }, []);
 
   const handleTouchEnd = useCallback(() => {
@@ -178,9 +178,10 @@ const MyMap: React.FC = () => {
                 <YMapControls position="bottom">
                   <YMapZoomControl />
                 </YMapControls>
+                {/* https sertificate 
                 <YMapControls position="bottom left">
                   <YMapGeolocationControl />
-                </YMapControls>
+                </YMapControls>*/}
               </>
             )}
             <YMapListener onMouseDown={() => { setIsContextOpen(false); setMarkerActiveId(""); }} />

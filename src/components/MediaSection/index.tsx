@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { setIsSidebarOpen } from '../../store/slices/refSlice';
 import Spinner from '../UI/Spinner';
+import { HOST } from '../../utils';
 
 type MediaSectionProps = {
   eventId: string;
@@ -39,18 +40,14 @@ const MediaSection = ({ eventId, position }: MediaSectionProps) => {
 
     if (loading) return <Spinner position='unset' />;
     if (error) return <div>{error}</div>;
-    if (!media || media.length === 0) return <div>Медиафайлы не найдены</div>;
-
+    if (!media) return <div>Медиафайлы не найдены</div>;
+    if (media[0].media.length === 0) return <div>Медиафайлы не найдены</div>;
     const urls: string[] = media.flatMap(item => item.media);
 
     return (
       <div className={classes.content}>
         {urls.map((url) =>
-          url.match(/\.(jpeg|jpg|gif|png)$/i) ? (
-            <img src={`http://v101242.hosted-by-vdsina.com:5000/${url}`} alt="media" className={classes.image} key={url} />
-          ) : (
-            <video src={`http://v101242.hosted-by-vdsina.com:5000/${url}`} controls autoPlay={false} className={classes.video} key={url} />
-          )
+          <img src={`${HOST}/${url}`} alt="media" className={classes.image} key={url} />
         )}
       </div>
     );

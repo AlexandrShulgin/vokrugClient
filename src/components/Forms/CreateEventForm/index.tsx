@@ -105,14 +105,14 @@ const CreateEventForm: React.FC<CreateEventFormProps> = ({ cords, onClose, id, n
           </label>
           <div className={classes.filenames}>
           {media.map((item, index) => 
-            <div>
+            <div key={index}>
               {index < 2 ? <div>{item.name}</div> : ''}
             </div>
           )}
           {media.length > 2 && <div>И еще {media.length - 2} файла(ов)</div>}
           </div>
         </div>
-        <input id="file-upload" type="file" multiple accept="image/*,video/*" onChange={handleMediaChange} />
+        <input id="file-upload" type="file" multiple accept="image/*" onChange={handleMediaChange} />
         
         <MyButton width='100%' height='35px' type='submit'>
           Подтвердить

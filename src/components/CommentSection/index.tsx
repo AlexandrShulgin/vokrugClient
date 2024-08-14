@@ -26,8 +26,8 @@ const CommentSection = ({ eventId }: CommentSectionProps) => {
     <div className={classes.CommentSection}>
       <AddCommentForm eventId={eventId} onRerender={() => setRerender(!rerender)}/>
         {comments ? 
-          comments.map((comment) => (
-            <div key={comment.id}>
+          comments.map((comment, index) => (
+            <div key={index}>
               <CommentCard comment={comment}/>
             </div>
         ))

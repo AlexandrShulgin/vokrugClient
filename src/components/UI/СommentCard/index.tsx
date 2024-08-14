@@ -32,11 +32,7 @@ const CommentCard = ({comment}: any) => {
         </div>
         {comment.media.length !== 0 && comment.media[0] !== "" &&
           <div className={classes.media}>
-            {comment.media[0].match(/\.(jpeg|jpg|gif|png)$/i) ? (
-                <img src={`${HOST}/${comment.media[0]}`} alt={'media'} className={classes.image}/>
-              ) : (
-                <video src={`${HOST}/${comment.media[0]}`} controls autoPlay={false} className={classes.video}/>
-              )}
+            <img src={`${HOST}/${comment.media[0]}`} alt={'media'} className={classes.image}/>
           </div>
         }
         <div className={classes.footer}>
